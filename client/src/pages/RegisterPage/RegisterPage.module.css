@@ -1,0 +1,120 @@
+
+ .fullScreenContainer {
+     background-image: url('grooming2.png');
+     height: 100vh;
+     width: 100vw;
+     background-size: cover;
+     background-position: center;
+     display: flex;
+     justify-content: center;
+     align-items: center;
+
+ }
+
+ .loginContainer {
+     border-radius:20px;
+     padding: 40px 30px;
+     width: 80%;
+     max-width: 700px;
+     border-radius: 20px;
+ }
+
+ .loginTitle {
+     margin: 0;
+     color: white;
+     text-align: center;
+     font-size: 2rem;
+     font-weight: normal;
+ }
+
+ .form {
+
+     border: 3px solid #7922CC;
+     border-radius: 25px;
+     padding: 15px;
+     background-color: #F8F1FF;
+     display: flex;
+     flex-direction: column;
+     gap: 20px;
+     margin-top: 30px;
+ }
+
+ .inputGroup {
+     display: flex;
+     flex-direction: column;
+     gap: 7px;
+ }
+
+ .inputGroup label {
+     color: white;
+     font-weight: lighter;
+ }
+
+ .inputGroup input {
+     font-size: 1.25rem;
+     padding: .5em;
+     border: 2px solid #7922CC;
+     outline: none;
+     border-radius: .25em;
+     background-color: #F8F1FF;
+
+     font-weight: lighter;
+ }
+ .inputGroup a
+ {
+     justify-content: center;
+
+ }
+
+ .inputGroup.success input {
+
+ }
+
+ .inputGroup.error input {
+
+ }
+
+ .inputGroup input:focus {
+
+ }
+
+ .inputGroup .msg {
+
+ }
+
+
+
+ .loginButton {
+     padding: .5em 1em;
+     font-size: 1.5rem;
+     font-weight: lighter;
+     color: white;
+
+     border-radius: .25em;
+     outline: none;
+     cursor: pointer;
+ }
+
+
+ .registerButton {
+     font-size: 1.25rem;
+     border: 1px solid #7922CC;
+     padding: .5em 1em;
+     font-weight: lighter;
+     color:#7922CC;
+     background-color: #F8F1FF;
+     border-radius: .20em;
+     outline: none;
+     cursor: pointer;
+
+ }
+
+ .loginButton:hover,
+ .loginButton:focus {
+
+ }
+
+ .registerButton:hover,
+ .registerButton:focus {
+
+ }

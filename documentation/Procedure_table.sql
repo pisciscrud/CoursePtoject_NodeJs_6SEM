@@ -1,0 +1,1 @@
+INSERT INTO Cursach.Procedure_table (id, name_procedure, Price, description, procedure_photo) VALUES ('e505b19b-d08e-11ed-a3c7-0242ac110002', 'Grooming', 25.00, 'For all types of pet', '9b33f1b5-169a-4b99-a685-749432fb80a9.png');

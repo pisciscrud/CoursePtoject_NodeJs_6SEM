@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mysql"
+  url      = env("DATABASE_URL")
+}
+
+model Master {
+  id                  String                @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name_master         String                @db.VarChar(20)
+  surname_master      String                @db.VarChar(20)
+  description         String                @db.Text
+  photo_master        String                @db.VarChar(100)
+  Master_to_Procedure Master_to_Procedure[]
+  Schedule            Schedule[]
+}
+
+model Master_to_Procedure {
+  id              String          @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  master_id       String          @db.Char(36)
+  procedure_id    String          @db.Char(36)
+  Procedure_table Procedure_table @relation(fields: [procedure_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_masterprocedure")
+  Master          Master          @relation(fields: [master_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_proceduremaster")
+
+  @@index([procedure_id], map: "fk_masterprocedure")
+  @@index([master_id], map: "fk_proceduremaster")
+}
+
+model Pet {
+  id          String     @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  pet_type_id Int
+  age         Int
+  id_owner    String     @db.Char(36)
+  nickname    String     @db.VarChar(30)
+  pettype     pettype    @relation(fields: [pet_type_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pettype")
+  User_table  User_table @relation(fields: [id_owner], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_petuser")
+  Schedule    Schedule[]
+
+  @@index([pet_type_id], map: "fk_pettype")
+  @@index([id_owner], map: "fk_petuser")
+}
+
+model Procedure_table {
+  id                  String                @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  name_procedure      String                @db.VarChar(20)
+  Price               Decimal               @db.Decimal(13, 2)
+  description         String                @db.Text
+  procedure_photo     String                @db.VarChar(100)
+  Master_to_Procedure Master_to_Procedure[]
+  Procedure_to_pet    Procedure_to_pet[]
+  Schedule            Schedule[]
+}
+
+model Procedure_to_pet {
+  id              String          @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  pet_id          Int
+  procedure_id    String          @db.Char(36)
+  pettype         pettype         @relation(fields: [pet_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_pettypeproc")
+  Procedure_table Procedure_table @relation(fields: [procedure_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_procproc")
+
+  @@index([pet_id], map: "fk_pettypeproc")
+  @@index([procedure_id], map: "fk_procproc")
+}
+
+model Role_table {
+  id         Int          @id
+  Role_name  String       @db.VarChar(30)
+  User_table User_table[]
+}
+
+model Schedule {
+  id              String          @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  pet_id          String          @db.Char(36)
+  master_id       String          @db.Char(36)
+  procedure_id    String          @db.Char(36)
+  owner_id        String          @db.Char(36)
+  date_           DateTime        @db.Date
+  status_id       Int
+  Pet             Pet             @relation(fields: [pet_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_petschedule")
+  Procedure_table Procedure_table @relation(fields: [procedure_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_procedureschedule")
+  Master          Master          @relation(fields: [master_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_schedulemaster")
+  Status          Status          @relation(fields: [status_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_statusschedule")
+  User_table      User_table      @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_userschedule")
+
+  @@index([pet_id], map: "fk_petschedule")
+  @@index([procedure_id], map: "fk_procedureschedule")
+  @@index([master_id], map: "fk_schedulemaster")
+  @@index([status_id], map: "fk_statusschedule")
+  @@index([owner_id], map: "fk_userschedule")
+}
+
+model Status {
+  id          Int        @id @default(4)
+  status_name String     @db.VarChar(20)
+  Schedule    Schedule[]
+}
+
+model User_table {
+  id         String     @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  full_name  String     @db.VarChar(30)
+  email      String     @db.VarChar(30)
+  login      String     @db.VarChar(64)
+  password   String     @db.VarChar(64)
+  id_role    Int        @default(2)
+  Pet        Pet[]
+  Schedule   Schedule[]
+  Role_table Role_table @relation(fields: [id_role], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_userrole")
+
+  @@index([id_role], map: "fk_userrole")
+}
+
+model pettype {
+  id               Int                @id
+  pet_name         String             @db.VarChar(20)
+  Pet              Pet[]
+  Procedure_to_pet Procedure_to_pet[]
+}
