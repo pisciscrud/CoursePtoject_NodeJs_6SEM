@@ -10,22 +10,26 @@ import HomePage from "./pages/HomePage/HomePage";
 import AdminPage from "./pages/AdminPage/AdminPage";
 import MasterPage from "./pages/MasterPage/MasterPage";
 import ProcedurePage from "./pages/ProcedurePage/ProcedurePage";
+import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
+import {LocalizationProvider} from "@mui/x-date-pickers";
 function App() {
 
 
   return (
-      <div>
-        <Router>
-            <Routes>
-              <Route path="/" element={<RegisterPage/>}/>
-                <Route path="/login" element={<LoginPage/>}/>
-                <Route path="/home" element={<HomePage/>}/>
-                <Route path="/admin" element={<AdminPage/>}/>
-                <Route path="/masters"element={<MasterPage/>}></Route>
-                <Route path="/procedures"element={<ProcedurePage/>}></Route>
-                </Routes>
-        </Router>
-      </div>
+      <LocalizationProvider dateAdapter={AdapterDateFns}>
+          <>
+              <Router>
+                  <Routes>
+                      <Route path="/" element={<RegisterPage/>}/>
+                      <Route path="/login" element={<LoginPage/>}/>
+                      <Route path="/home" element={<HomePage/>}/>
+                      <Route path="/admin" element={<AdminPage/>}/>
+                      <Route path="/masters"element={<MasterPage/>}></Route>
+                      <Route path="/procedures"element={<ProcedurePage/>}></Route>
+                  </Routes>
+              </Router>
+          </>
+      </LocalizationProvider>
   );
 
 }

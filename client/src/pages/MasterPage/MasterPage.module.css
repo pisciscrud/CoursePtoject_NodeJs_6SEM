@@ -1,7 +1,8 @@
 .container
 {
-    background-color: #D59DF5;
+      background-color: #FFBAF6;;
     height:100vh;
     width:100vw !important;
     margin:0px;
+    overflow:hidden ;
 }

@@ -13,7 +13,7 @@ class ScheduleService
     async addRecordByUser(pet_id,master_id, procedure_id, owner_id, date_, status_id)
     {
         try {
-            return this.scheduleRepository.addRecord(pet_id, master_id, procedure_id, owner_id, date_)
+            return await  this.scheduleRepository.addRecord(pet_id, master_id, procedure_id, owner_id, date_)
         }
         catch (e)
         {
@@ -26,12 +26,33 @@ class ScheduleService
     {
         try
         {
-            return this.scheduleRepository.getRecordsOfUser(idUser)
+            return  await this.scheduleRepository.getRecordsOfUser(idUser)
 
         }
         catch (e)
         {}
 
+    }
+
+    async getAllRecords()
+    {
+        try
+        {
+            return  await this.scheduleRepository.getAllRecordss();
+        }
+        catch (e)
+        {}
+
+    }
+
+    async getRecordsForProcedure(id)
+    {
+        try
+        {
+            return  await this.scheduleRepository.getRecordsForProcedures(id);
+        }
+        catch (e)
+        {}
     }
 
 

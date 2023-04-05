@@ -77,6 +77,7 @@ model Schedule {
   procedure_id    String          @db.Char(36)
   owner_id        String          @db.Char(36)
   date_           DateTime        @db.Date
+  time            DateTime?        @db.Time()
   status_id       Int
   Pet             Pet             @relation(fields: [pet_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_petschedule")
   Procedure_table Procedure_table @relation(fields: [procedure_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_procedureschedule")
@@ -98,15 +99,16 @@ model Status {
 }
 
 model User_table {
-  id         String     @id @default(dbgenerated("(uuid())")) @db.Char(36)
-  full_name  String     @db.VarChar(30)
-  email      String     @db.VarChar(30)
-  login      String     @db.VarChar(64)
-  password   String     @db.VarChar(64)
-  id_role    Int        @default(2)
-  Pet        Pet[]
-  Schedule   Schedule[]
-  Role_table Role_table @relation(fields: [id_role], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_userrole")
+  id           String         @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  full_name    String         @db.VarChar(30)
+  email        String         @db.VarChar(30)
+  login        String         @db.VarChar(64)
+  password     String         @db.VarChar(64)
+  id_role      Int            @default(2)
+  Pet          Pet[]
+  Schedule     Schedule[]
+  Role_table   Role_table     @relation(fields: [id_role], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_userrole")
+  Notification Notification[]
 
   @@index([id_role], map: "fk_userrole")
 }
@@ -116,4 +118,14 @@ model pettype {
   pet_name         String             @db.VarChar(20)
   Pet              Pet[]
   Procedure_to_pet Procedure_to_pet[]
+}
+
+model Notification {
+  id         String     @id @default(dbgenerated("(uuid())")) @db.Char(36)
+  date_      DateTime   @db.Date
+  accepted   Boolean    @default(false)
+  user_id    String     @db.Char(36)
+  User_table User_table @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_notificationuser")
+
+  @@index([user_id], map: "fk_notificationuser")
 }

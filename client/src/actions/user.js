@@ -26,6 +26,13 @@ catch (err)
 };
 
 
+export const getPetsOfUser = async()=>
+{
+  const response = await axios.get('http://localhost:5000/api/pets/petsOfUser',{headers: authHeader()})
+    console.log(response.data);
+    return response.data;
+}
+
  function authHeader() {
      const token = JSON.parse(localStorage.getItem('token'));
      if (token) {

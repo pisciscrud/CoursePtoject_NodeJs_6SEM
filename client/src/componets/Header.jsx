@@ -11,9 +11,10 @@ const Header = () => {
         localStorage.removeItem('token');
         navigate('/login');
     };
-    //const tags = ["Contacts","Master","Pets","Information];
+
     return (
         <div className={styles.header}>
+
 
             <div className={styles.container}>
             <a href="/procedures">
@@ -39,6 +40,7 @@ const Header = () => {
             </div>
 
             <div className={styles.logout}><button className={styles.logoutBotton} onClick={handleLogout}>Logout</button></div>
+
         </div>
     );
 };

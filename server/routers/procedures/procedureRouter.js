@@ -30,11 +30,12 @@ procedureRouter.get('',async (req,res,next)=>{
 procedureRouter.post('', roleMiddleware(["admin"]),async(req,res,next)=>
 {
   try {
-      const {name_procedure, Price, description} = req.body;
+      const {name_procedure, Price, description,Procedure_to_pet} = req.body;
+      console.log(Procedure_to_pet);
       const {img} = req.files;
       let procedure_photo = uuid.v4() + ".png";
       img.mv(path.resolve(__dirname, '../..', 'static', procedure_photo));
-      const procedure = await procedureService.createProcedure(name_procedure, Price, description, procedure_photo);
+      const procedure = await procedureService.createProcedure(name_procedure, Price, description, procedure_photo,Procedure_to_pet);
 
       return res.json(procedure);
   }
@@ -99,6 +100,13 @@ procedureRouter.get('/bytype/:id',async (req,res,next)=>{
     {
         next(e);
     }
+})
+
+procedureRouter.get('/types/:id',async (req,res,next)=>
+{
+    const {id}=req.params;
+    const connections = await procedureService.getTypeForProcedure(id);
+    res.json(connections);
 })
 
 

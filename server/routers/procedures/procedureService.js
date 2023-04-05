@@ -22,11 +22,11 @@ class ProcedureService{
     }
 
 
-    async createProcedure(name_procedure,Price,description,procedure_photo)
+    async createProcedure(name_procedure,Price,description,procedure_photo,Procedure_to_pet)
     {
         try {
 
-            return this.procedureRepository.createProcedure(name_procedure,Price,description,procedure_photo)
+            return this.procedureRepository.createProcedure(name_procedure,Price,description,procedure_photo,Procedure_to_pet)
 
         }
         catch(e)
@@ -79,6 +79,21 @@ class ProcedureService{
         {
 
         }
+    }
+
+    async getTypeForProcedure(id_procedure)
+    {
+
+            try
+            {
+                return this.procedureRepository.findTypesByProcedure(id_procedure)
+            }
+        catch (e)
+        {
+
+        }
+
+
     }
 
 

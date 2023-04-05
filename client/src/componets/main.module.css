@@ -13,14 +13,17 @@
     border-radius: 13px;
     margin-left: 10px;
 }
+
 .header{
     width: 100vw;
-    height:200px;
+    height:180px;
 
     justify-content: center;
     align-items: center;
     display: flex;
-    padding-bottom: 12px;
+
+    background-color: #FFBAF6;
+    border-radius: 20px
 }
 
 
@@ -50,7 +53,6 @@ a
 }
 .container{
 
-    margin-top: 80px;
     padding: 10px;
     display: flex;
     justify-content: center;
@@ -72,8 +74,8 @@ a
     text-decoration: none;
     display: inline-block;
     font-size: 16px;
-    /*margin: 3px 3px;*/
+
     width: 80px;
     border-radius: 13px;
-    margin-left: 10px;
+    margin-right: 100px;
 }

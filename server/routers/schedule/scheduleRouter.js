@@ -8,6 +8,31 @@ const scheduleRouter = express.Router();
 
 const scheduleService = new ScheduleService();
 
+
+scheduleRouter.get('',async (req,res,next)=>
+{
+    try {
+        const records =  await scheduleService.getAllRecords()
+        res.json(records);
+    }
+    catch (e)
+        {}
+
+
+})
+
+scheduleRouter.get('/:id',async (req,res,next)=>
+{
+    try
+    {
+        const {id}=req.params;
+        const records =  await scheduleService.getRecordsForProcedure(id)
+        res.json(records);
+
+    }
+    catch (e)
+    {}
+})
 scheduleRouter.post('/submit',roleMiddleware(["user"]),async (req,res,next)=>
 {
     try
@@ -25,14 +50,14 @@ scheduleRouter.post('/submit',roleMiddleware(["user"]),async (req,res,next)=>
 
 })
 
-scheduleRouter.get('/recordsOfUser', async (req,res,next)=>
+scheduleRouter.get('/recordsOfUser',roleMiddleware(["user"]), async (req,res,next)=>
 {
     try
     {
         const idUser= req.userId;
-        const recordsOfUser = await scheduleService.getRecordsOfUser( idUser);
+        console.log(idUser);
+        const recordsOfUser = await scheduleService.getRecordsOfUser(idUser);
         res.json(recordsOfUser);
-
     }
     catch (e)
     {

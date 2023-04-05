@@ -125,6 +125,42 @@ class ScheduleRepository
 
  }
 
+ async getAllRecordss(){
+        try
+        {
+
+         const records =   await this.prismaClient.Schedule.findMany()
+            return records;
+        }
+        catch (e)
+        {
+            throw createError(500,"Db Error"+e.message);
+
+        }
+ }
+
+
+ async getRecordsForProcedures(id)
+ {
+     try
+     {
+         const records= await this.prismaClient.Schedule.findMany(
+             {
+                 where :
+                     {
+                         procedure_id:id
+                     }
+             }
+         )
+     }
+     catch (e)
+     {
+
+         throw createError(500,"Db Error"+e.message);
+     }
+
+ }
+
 
 
  async getRecordsOfUser(idUser)
@@ -132,12 +168,44 @@ class ScheduleRepository
      try
      {
 
-        await this.prismaClient.Schedule.findMany({
+      const records =   await this.prismaClient.Schedule.findMany({
             where: {
                 owner_id: idUser
-            }
-        })
+            },
+          select :
+              {
+                  id:true,
+                  date_:true,
+                  Procedure_table:{
+                      select : {
+                         name_procedure: true
+                      }
+                  },
+                  Master :
+                      {
+                          select :
+                              {
+                                  name_master:true,
+                                  surname_master:true
+                              }
+                      },
+                  Pet:
+                      {
+                          select :
+                              {
+                                  nickname:true
+                              }
+                      },
+                  Status :
+                      {
+                         select :
+                             {status_name:true}
+                      },
 
+
+              }
+        })
+      return records;
      }
      catch (e)
      {

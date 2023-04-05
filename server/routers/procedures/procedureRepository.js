@@ -18,8 +18,16 @@ class ProcedureRepository {
     }
 
 
-    async createProcedure(name_procedure, Price, description, procedure_photo) {
+    async createProcedure(name_procedure, Price, description, procedure_photo,Procedure_to_pet) {
         try {
+
+            const arr = JSON.parse(Procedure_to_pet);
+
+            const result = arr.map(obj => {
+                const key = Object.keys(obj)[0].replace(/'/g, '').trim();
+                const value = obj[key];
+                return {[key]: value};
+            });
 
             const procedureWithSameName = await this.prismaClient.Procedure_table.findFirst(
                 {where: {name_procedure: name_procedure}}
@@ -31,7 +39,11 @@ class ProcedureRepository {
                         data: {
                             name_procedure,
                             Price: price,
-                            description, procedure_photo
+                            description, procedure_photo,
+                            Procedure_to_pet:
+                                {
+                                    create: result
+                                }
                         }
                     }
                 )
@@ -134,6 +146,7 @@ class ProcedureRepository {
                     },
                     Master: {
                         select: {
+                            id:true,
                             name_master: true,
                             surname_master: true
                         }
@@ -173,6 +186,32 @@ class ProcedureRepository {
             throw createError(500, "Db error:" + e.message);
         }
     }
+
+    async findTypesByProcedure(id_procedure)
+    {
+        try
+        {
+            const typesForProcedure = await this.prismaClient.Procedure_to_pet.findMany({
+                where:{
+                    procedure_id:id_procedure
+                },
+                select :
+                    {
+                        pettype:true
+                    }
+            })
+            return typesForProcedure;
+
+
+
+        }
+        catch (e)
+        {
+            throw createError(500, "Db error:" + e.message);
+        }
+    }
+
+  //  async connectProcedureAndType()
 
 
 
