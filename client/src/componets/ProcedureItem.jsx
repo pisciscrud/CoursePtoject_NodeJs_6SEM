@@ -23,6 +23,8 @@ import {DatePicker} from "@mui/x-date-pickers";
 import {MenuItem} from "@mui/material";
 import ProcedureRegistrationForm from "./ProcedureRegistrationForm"
 import axios from "axios";
+import { useQuery } from 'react-query';
+import {authHeader} from "../actions/procedure";
 
 const useStyles = makeStyles({
     root: {
@@ -75,11 +77,18 @@ const DialogContent = withStyles((theme) => ({
 
 
 
-const ProcedureItem = ({procedure, schedule,pets}) => {
+const ProcedureItem = ({procedure, schedule}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const [masters, setMasters] = useState([])
-    const [avaiablePets,setavaiablePets]=useState([])
+   const [masters, setMasters] = useState([])
+    //const [availablePetType,setAvailablePetType]=useState([])
+  const [pets,setPets]=useState([])
+
+
+
+
+
+
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -87,15 +96,34 @@ const ProcedureItem = ({procedure, schedule,pets}) => {
         setOpen(false);
     };
 
+
+
+
+
+
     useEffect(() => {
         axios.get(`http://localhost:5000/api/procedures/mastersAndProcedures/${procedure.id}`)
             .then(response => {
+                console.log('masters:', response.data)
                     setMasters(response.data.map(item => item.Master))
-                    console.log('masters:', masters)
+
                 }
             )
             .catch(error => console.log(error));
+        axios.get(`http://localhost:5000/api/procedures/petsOfUser/${procedure.id}`,{headers: authHeader()})
+            .then(response=>
+            {
+                console.log('ytn', response.data)
+                setPets(response.data)
+
+            })
     }, []);
+
+    // function filterPetsByType(pets, petType) {
+    //   const available = pets.filter(p => petType.map(t => t.pet_type_id).includes(p.pet_type_id));
+    //   console.log('available', available);
+    //   setAvailablePets(available);
+    // }
 
     return (
         <div >
@@ -129,6 +157,7 @@ const ProcedureItem = ({procedure, schedule,pets}) => {
                     </Typography>
                     <ProcedureRegistrationForm
                         //TODO only pets that can do this procedure
+                        procedure={procedure}
                         pets={pets}
                         masters={masters}
                         schedule={schedule}

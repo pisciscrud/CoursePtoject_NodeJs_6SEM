@@ -11,18 +11,22 @@ class ScheduleRepository
         this.prismaClient=DbClient;
     }
 
-    async addRecord(pet_id,master_id, procedure_id, owner_id, date_)
+    async addRecord(pet_id, master_id, procedure_id, owner_id, date_,time)
     {
         try
         {
-
-
            const dat = new Date(date_);
+            const t = Number(time.substring(0,2));
+            const time1 = new Date(null);
+            time1.setUTCHours(t)
+
+
             const rec = await this.prismaClient.Schedule.findFirst({
                 where: {
                     master_id:master_id,
                     procedure_id:procedure_id,
                     date_:dat,
+                    time:time
                 }
             })
 
@@ -34,6 +38,7 @@ class ScheduleRepository
                     }
                 }
             )
+
 
             const pet = await this.prismaClient.Pet.findUnique(
                 {
@@ -53,7 +58,7 @@ class ScheduleRepository
 
 
 
-            console.log(rec,connectionBetweenMasterAndProcedure,connectionProcedureWhithType);
+
            if  (!rec && connectionBetweenMasterAndProcedure && connectionProcedureWhithType)
             {
                 const record = await this.prismaClient.Schedule.create({
@@ -63,10 +68,13 @@ class ScheduleRepository
                         procedure_id,
                         owner_id,
                         date_:dat,
-                        status_id: 1
+                        status_id: 1,
+                        time:time
                     }
                 })
+                return record;
             }
+
             else
             {
                  throw new Error("sorry in this time master is busy")

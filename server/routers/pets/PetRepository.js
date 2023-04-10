@@ -60,11 +60,25 @@ class PetRepository
                     id:idPet
                 }
             })
+            return true
         }
         catch (e)
         {
             throw createError(500,"Db Error"+e.message);
         }
+    }
+    async GetPetTypes()
+    {
+        try
+        {
+            const petTypes=await this.prismaClient.pettype.findMany();
+            return petTypes
+        }
+        catch (e)
+        {
+            throw createError(500,"Db Error"+e.message);
+        }
+
     }
 }
 

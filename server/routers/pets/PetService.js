@@ -8,7 +8,19 @@ class PetService
         this.petRepository =  new PetRepository();
     }
 
+   async getPetTypes()
+   {
+       try
+       {
+           return this.petRepository.GetPetTypes()
 
+       }
+       catch (e)
+       {
+
+       }
+
+   }
     async getPetsOfUser(idUser)
     {
         try {

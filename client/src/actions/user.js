@@ -29,7 +29,7 @@ catch (err)
 export const getPetsOfUser = async()=>
 {
   const response = await axios.get('http://localhost:5000/api/pets/petsOfUser',{headers: authHeader()})
-    console.log(response.data);
+    console.log('pets' ,response.data);
     return response.data;
 }
 

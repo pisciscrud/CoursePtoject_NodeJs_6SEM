@@ -211,7 +211,32 @@ class ProcedureRepository {
         }
     }
 
-  //  async connectProcedureAndType()
+ async findPetsOfUserByProcedure(id_user,id_procedure) {
+     try {
+         const petsOfUser = await this.prismaClient.Pet.findMany({
+             where: {
+                 id_owner: id_user,
+                 pettype: {
+                     Procedure_to_pet: {
+                         some: {
+                             procedure_id: id_procedure
+                         }
+                     }
+                 }
+             },
+             select:
+                 {
+                     id: true,
+                     nickname: true,
+                    pettype: true
+                 }
+         })
+
+         return petsOfUser;
+     } catch (e) {
+         throw createError(500, "Db error:" + e.message);
+     }
+ }
 
 
 

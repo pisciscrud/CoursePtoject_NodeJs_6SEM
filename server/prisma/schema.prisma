@@ -77,7 +77,7 @@ model Schedule {
   procedure_id    String          @db.Char(36)
   owner_id        String          @db.Char(36)
   date_           DateTime        @db.Date
-  time            DateTime?        @db.Time()
+  time            String          @db.Char(36)
   status_id       Int
   Pet             Pet             @relation(fields: [pet_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_petschedule")
   Procedure_table Procedure_table @relation(fields: [procedure_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_procedureschedule")

@@ -38,8 +38,9 @@ scheduleRouter.post('/submit',roleMiddleware(["user"]),async (req,res,next)=>
     try
     {
         const idUser= req.userId;
-        const {pet_id,master_id,procedure_id,date_}=req.body;
-        const recordForSubmit = await scheduleService.addRecordByUser(pet_id,master_id,procedure_id,idUser,date_)
+        const {pet_id,master_id,procedure_id,date_,time}=req.body;
+        console.log(pet_id,master_id,procedure_id,date_,time)
+        const recordForSubmit = await scheduleService.addRecordByUser(pet_id,master_id,procedure_id,idUser,date_,time)
         res.json(recordForSubmit);
     }
     catch(e)

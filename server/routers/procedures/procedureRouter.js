@@ -110,5 +110,19 @@ procedureRouter.get('/types/:id',async (req,res,next)=>
 })
 
 
+procedureRouter.get('/petsOfUser/:id',roleMiddleware(["user"]),async (req,res,next)=>
+
+{
+    try {
+        const {id} = req.params;
+        const idUser = req.userId;
+        const pets = await procedureService.getPetForProcedure(id, idUser);
+        res.json(pets);
+    }
+    catch (e)
+    {
+        next(e);
+    }
+})
 
 module.exports = procedureRouter

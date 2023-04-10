@@ -23,11 +23,24 @@ petRouter.get('/petsOfUser',roleMiddleware(["user"]),async (req,res,next)=>
     }
 })
 
+petRouter.get('/types',async (req,res)=>
+{
+    try
+    {
+        const types = await petService.getPetTypes();
+        res.json(types)
+    }
+    catch (e)
+    {
+        next(e);
+    }
+})
+
 petRouter.post('/add',roleMiddleware(["user"]),async(req,res,next) =>{
 
     try {
         const idUser=req.userId;
-        const {nickname,pet_type_id,age}=req.body;
+        const {pet_type_id,age,nickname}=req.body;
         const pet = await petService.addPet(pet_type_id,age,idUser,nickname);
         res.json(pet);
 

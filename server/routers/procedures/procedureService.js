@@ -95,6 +95,17 @@ class ProcedureService{
 
 
     }
+    async getPetForProcedure(id_procedure,id_user)
+    {
+        try
+        {
+            return this.procedureRepository.findPetsOfUserByProcedure(id_user,id_procedure)
+        }
+        catch (e)
+        {
+
+        }
+    }
 
 
 }

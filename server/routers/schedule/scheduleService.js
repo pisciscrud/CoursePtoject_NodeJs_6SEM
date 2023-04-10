@@ -10,14 +10,15 @@ class ScheduleService
     }
 
 
-    async addRecordByUser(pet_id,master_id, procedure_id, owner_id, date_, status_id)
+    async addRecordByUser(pet_id,master_id, procedure_id, owner_id, date_, time)
     {
         try {
-            return await  this.scheduleRepository.addRecord(pet_id, master_id, procedure_id, owner_id, date_)
+            const res = await this.scheduleRepository.addRecord(pet_id, master_id, procedure_id, owner_id, date_,time)
+            return res;
         }
         catch (e)
         {
-
+        console.log(e.message)
         }
     }
 

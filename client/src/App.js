@@ -12,6 +12,7 @@ import MasterPage from "./pages/MasterPage/MasterPage";
 import ProcedurePage from "./pages/ProcedurePage/ProcedurePage";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {LocalizationProvider} from "@mui/x-date-pickers";
+import ProfilePage from "./pages/ProfilePage/ProfilePage";
 function App() {
 
 
@@ -25,7 +26,8 @@ function App() {
                       <Route path="/home" element={<HomePage/>}/>
                       <Route path="/admin" element={<AdminPage/>}/>
                       <Route path="/masters"element={<MasterPage/>}></Route>
-                      <Route path="/procedures"element={<ProcedurePage/>}></Route>
+                      <Route path="/profile" element={<ProfilePage/>}></Route>
+                      <Route path="/procedures" element={<ProcedurePage/>}></Route>
                   </Routes>
               </Router>
           </>
