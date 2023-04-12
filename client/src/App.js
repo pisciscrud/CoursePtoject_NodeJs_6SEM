@@ -13,6 +13,9 @@ import ProcedurePage from "./pages/ProcedurePage/ProcedurePage";
 import {AdapterDateFns} from "@mui/x-date-pickers/AdapterDateFns";
 import {LocalizationProvider} from "@mui/x-date-pickers";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
+import ScheduleList from "./pages/ScheduleList/ScheduleList";
+import MainPage from "./pages/MainPage/MainPage";
+import PetsList from "./componets/PetsList";
 function App() {
 
 
@@ -21,13 +24,19 @@ function App() {
           <>
               <Router>
                   <Routes>
-                      <Route path="/" element={<RegisterPage/>}/>
-                      <Route path="/login" element={<LoginPage/>}/>
-                      <Route path="/home" element={<HomePage/>}/>
-                      <Route path="/admin" element={<AdminPage/>}/>
-                      <Route path="/masters"element={<MasterPage/>}></Route>
-                      <Route path="/profile" element={<ProfilePage/>}></Route>
-                      <Route path="/procedures" element={<ProcedurePage/>}></Route>
+                      <Route index element={<RegisterPage/>}/>
+                      <Route path="login" element={<LoginPage/>}/>
+                      <Route path="app" element={<MainPage/>}>
+                          <Route path="" element={<HomePage/>}></Route>
+                          <Route path="masters"element={<MasterPage/>}></Route>
+                          <Route path="profile" element={<ProfilePage/>}>
+                              <Route path="schedule" element={<ScheduleList/>}></Route>
+                              <Route path="pets" element={<PetsList/>}></Route>
+                          </Route>
+                          <Route path="procedures" element={<ProcedurePage/>}></Route>
+
+                      </Route>
+                      <Route path="admin" element={<AdminPage/>}/>
                   </Routes>
               </Router>
           </>

@@ -73,20 +73,20 @@ const PetsList = () => {
                 console.log('refetch',data.data);
                 setPets(data.data)})
 
-    },[])
+    },[pets])
     const handleDeletePet = async (currentPet) =>
     {
 
         if (  window.confirm (`Are you sure that want delete ${currentPet.nickname}`))
         {
             const res =  await  deletePet(currentPet.id);
-            if (res.status === 200) {
+           if (res.status === 200) {
                 refetchPets()
                     .then((data) => {
 
                         setPets(data.data)})
             }
-            return res;
+           return res;
 
         }
 
@@ -100,7 +100,7 @@ const PetsList = () => {
                 }
                 <div className={styles.container}>
                    <Button onClick={handleClickOpen}>
-                        <img src={process.env.PUBLIC_URL + 'Vector.svg'} className={styles.icon} width="100"
+                        <img src={process.env.PUBLIC_URL + '/Vector.svg'} className={styles.icon} width="100"
                              height="100"/>
 
                    </Button>

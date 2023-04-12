@@ -15,30 +15,34 @@
 }
 
 .header{
-    width: 100vw;
-    height:180px;
-
+    max-width: 180px;
+    min-width: 160px;
     justify-content: center;
     align-items: center;
     display: flex;
-
-    background-color: #FFBAF6;
-    border-radius: 20px
+    flex-direction: column;
+    height: 100%;
+    background-color: #ff49c4;
 }
 
 
 a
 {
-    text-direction: none;
+    text-decoration: none;
 }
 
 
 .icon
 {
+    width: 40px;
+    height: 40px;
+}
 
-    /*margin-top: 20px;*/
-    /*margin-left: 20px;*/
-
+.linkItem {
+    display: flex;
+    align-items: center;
+    flex-direction: column;
+    margin: 10px 0;
 }
 
 .picon
@@ -78,4 +82,64 @@ a
     width: 80px;
     border-radius: 13px;
     margin-right: 100px;
+}
+
+.noteCard {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    text-decoration: none;
+    color: #0e343c;
+    max-width: 470px;
+    width: 100%;
+    min-height: 100px;
+    background-color: #dbf2f4;
+    border-radius: 10px;
+    margin: 10px;
+    padding: 10px;
+    z-index: 2;
+    /* position: relative;*/
+}
+
+.noteCardBody
+{
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+}
+
+.noteCardFooter {
+    display: flex;
+    flex-direction: column;
+}
+
+.noteCardNameProcedure {
+    font-size: 22px;
+}
+.status-label {
+    padding: 7px 5px 5px;
+    border-radius: 5px;
+}
+.waiting {
+    display: flex;
+    background-color: #ffd300;
+    width: 100px;
+    border-radius: 5px;
+}
+.denied {
+    padding: 7px 5px 5px;
+    border-radius: 5px;
+    background-color: red;
+}
+.approved {
+    padding: 7px 5px 5px;
+    border-radius: 5px;
+    background-color: greenyellow;
+}
+
+.completed
+{
+    padding: 7px 5px 5px;
+    border-radius: 5px;
+    background-color: lightskyblue;
 }

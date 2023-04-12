@@ -9,6 +9,31 @@ const scheduleRouter = express.Router();
 const scheduleService = new ScheduleService();
 
 
+scheduleRouter.get(
+    '/recordsOfUser',
+    async (req, res, next) => {
+        console.log('scheduleRouter')
+        next()
+    },
+    roleMiddleware(["user"]),
+    async (req,res,next)=> {
+        try
+        {
+            const idUser= req.userId;
+            console.log(idUser);
+            const recordsOfUser = await scheduleService.getRecordsOfUser(idUser);
+            console.log(recordsOfUser)
+
+            res.json(recordsOfUser);
+        }
+        catch (e)
+        {
+            console.log('Error scheduleRouter')
+            next(e)
+        }
+    }
+)
+
 scheduleRouter.get('',async (req,res,next)=>
 {
     try {
@@ -51,20 +76,6 @@ scheduleRouter.post('/submit',roleMiddleware(["user"]),async (req,res,next)=>
 
 })
 
-scheduleRouter.get('/recordsOfUser',roleMiddleware(["user"]), async (req,res,next)=>
-{
-    try
-    {
-        const idUser= req.userId;
-        console.log(idUser);
-        const recordsOfUser = await scheduleService.getRecordsOfUser(idUser);
-        res.json(recordsOfUser);
-    }
-    catch (e)
-    {
-        next(e)
-    }
-})
 
 
 

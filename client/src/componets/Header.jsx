@@ -1,45 +1,27 @@
 import React from 'react';
-import {Navbar, Nav} from "react-bootstrap";
-import Pill from '../componets/Pill.jsx'
+
+
 import styles from './main.module.css'
-import {useNavigate} from "react-router-dom";
+import {Link, useNavigate} from "react-router-dom";
 
 const Header = () => {
-    const navigate = useNavigate();
-    const handleLogout = () => {
 
-        localStorage.removeItem('token');
-        navigate('/login');
-    };
+    const { PUBLIC_URL } = process.env
 
     return (
         <div className={styles.header}>
 
-
-            <div className={styles.container}>
-            <a href="/procedures">
-                <img src={process.env.PUBLIC_URL + '887.png'} className={styles.icon} width="100"
-                                    height="100"/>
+            <Link className={styles.linkItem} to="procedures">
+                <img src={PUBLIC_URL + '/887.png'} className={styles.icon}/>
                 <div className={styles.picon}>Procedures</div>
-            </a>
-        </div>
+            </Link>
+            <Link className={styles.linkItem} to="masters">
+                <img src={PUBLIC_URL + '/888.png'} className={styles.icon}/>
+                <div className={styles.picon}>Master</div>
+            </Link>
 
-            <div className={styles.container}>
-            <a href="/masters">
-                <img src={process.env.PUBLIC_URL + '888.png'} className={styles.icon} width="100"
-                                       height="100"/>
-                <div className={styles.picon}>Masters</div>
-            </a>
-            </div>
 
-            <div className={styles.container}>
-            <a href="/profile"><img src={process.env.PUBLIC_URL + '889.png'} className={styles.icon} width="100"
-                                 height="100"/>
-                <div className={styles.picon}>Profile</div>
-            </a>
-            </div>
 
-            <div className={styles.logout}><button className={styles.logoutBotton} onClick={handleLogout}>Logout</button></div>
 
         </div>
     );

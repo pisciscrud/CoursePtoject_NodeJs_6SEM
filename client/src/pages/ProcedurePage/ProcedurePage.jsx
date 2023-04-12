@@ -6,10 +6,7 @@ import styles from '../MasterPage/MasterPage.module.css'
 const ProcedurePage = () => {
     return (
         <div className={styles.container} >
-
-
-
-            <Header></Header>
+            {/*<Header></Header>*/}
             <ProcedureList></ProcedureList>
         </div>
     );

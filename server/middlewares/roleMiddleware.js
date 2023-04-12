@@ -2,14 +2,15 @@ const jwt = require('jsonwebtoken')
 const AuthRepository = require("../routers/auth/authRepository");
 
 
-module.exports =  function (roles) {
+module.exports = function (roles) {
     return async function (req, res, next) {
+        console.log('middleware')
         if (req.method === "OPTIONS") {
             next()
         }
-      const authRepository=new AuthRepository();
+        const authRepository=new AuthRepository();
         try {
-
+           console.log('aaa');
             const token = req.headers.authorization.split(' ')[1]
             if (!token) {
                 return res.status(403).json({message: "Пользователь не авторизован"})
@@ -25,7 +26,7 @@ module.exports =  function (roles) {
                     hasRole=true
             })
             if (!hasRole) {
-                return res.status(403).json({message: "You don't have accesss"})
+                return res.status(403).json({message: "You don't have access"})
             }
             req.userId = id;
             next();

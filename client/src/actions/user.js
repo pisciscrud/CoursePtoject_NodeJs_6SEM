@@ -32,6 +32,12 @@ export const getPetsOfUser = async()=>
     console.log('pets' ,response.data);
     return response.data;
 }
+export const getNotesOfUser = async()=>
+{
+    const response = await axios.get('http://localhost:5000/api/schedule/recordsOfUser',{headers: authHeader()})
+        console.log('notes' ,response.data);
+        return response.data;
+}
 
  function authHeader() {
      const token = JSON.parse(localStorage.getItem('token'));

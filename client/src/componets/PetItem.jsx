@@ -48,7 +48,7 @@ const PetItem = ({pet,onDeletePet}) => {
 
                     <CardMedia
                         className={classes.media}
-                        image={process.env.PUBLIC_URL + pet.pet_type_id + '.png'}
+                        image={process.env.PUBLIC_URL + `/${pet.pet_type_id}.png`}
                         title="Contemplative Reptile"
                     />
 

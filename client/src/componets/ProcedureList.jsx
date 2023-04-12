@@ -10,9 +10,7 @@ import {getSchedule} from "../actions/schedule";
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        marginTop: theme.spacing(2),
-       marginLeft: 100,
-
+        width: 600,
 
     },
 }));
@@ -27,17 +25,17 @@ const ProcedureList = () => {
 
 
     return (
-        <div>
+        <>
             <div className={classes.root} >
 
-                <Grid container spacing={3}>
+                <Grid container>
                     {procedures && procedures.map((procedure) => (
                         <ProcedureItem key={procedure.id} procedure={procedure} schedule={schedule} /*pets={pets}*/ />
                     ))}
                 </Grid>
 
-        </div>
-        </div>
+            </div>
+        </>
     );
 };
 

@@ -48,37 +48,59 @@ class ScheduleRepository
                 }
             )
 
+           if (pet) {
+               const connectionProcedureWithType = await this.prismaClient.Procedure_to_pet.findFirst({
+                   where: {
+                       pet_id: pet.pet_type_id,
+                       procedure_id: procedure_id
+                   }
+               })
 
-            const connectionProcedureWhithType = await this.prismaClient.Procedure_to_pet.findFirst({
-                where:{
-                    pet_id : pet.pet_type_id,
-                    procedure_id:procedure_id
-                }
-            })
+               if  (!rec && connectionBetweenMasterAndProcedure && connectionProcedureWithType)
+               {
+                   const record = await this.prismaClient.Schedule.create({
+                       data: {
+                           pet_id,
+                           master_id,
+                           procedure_id,
+                           owner_id,
+                           date_:dat,
+                           status_id: 1,
+                           time:time
+                       }
+                   })
+                   return record;
+               }
+
+               else
+               {
+                   throw new Error("sorry in this time master is busy")
+               }
+           }
 
 
 
 
-           if  (!rec && connectionBetweenMasterAndProcedure && connectionProcedureWhithType)
-            {
-                const record = await this.prismaClient.Schedule.create({
-                    data: {
-                        pet_id,
-                        master_id,
-                        procedure_id,
-                        owner_id,
-                        date_:dat,
-                        status_id: 1,
-                        time:time
-                    }
-                })
-                return record;
-            }
-
-            else
-            {
-                 throw new Error("sorry in this time master is busy")
-            }
+           // if  (!rec && connectionBetweenMasterAndProcedure && connectionProcedureWhithType)
+           //  {
+           //      const record = await this.prismaClient.Schedule.create({
+           //          data: {
+           //              pet_id,
+           //              master_id,
+           //              procedure_id,
+           //              owner_id,
+           //              date_:dat,
+           //              status_id: 1,
+           //              time:time
+           //          }
+           //      })
+           //      return record;
+           //  }
+           //
+           //  else
+           //  {
+           //       throw new Error("sorry in this time master is busy")
+           //  }
 
         }
         catch(e)
@@ -184,6 +206,7 @@ class ScheduleRepository
               {
                   id:true,
                   date_:true,
+                  time:true,
                   Procedure_table:{
                       select : {
                          name_procedure: true
@@ -213,6 +236,7 @@ class ScheduleRepository
 
               }
         })
+         console.log(records)
       return records;
      }
      catch (e)

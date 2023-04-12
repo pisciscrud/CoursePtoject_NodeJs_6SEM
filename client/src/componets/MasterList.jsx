@@ -13,8 +13,6 @@ import Pagination from '../componets/Pagination';
   const useStyles = makeStyles((theme) => ({
       root: {
           flexGrow: 1,
-          marginTop: theme.spacing(2),
-
       },
   }));
 const MasterList = () => {
@@ -43,7 +41,7 @@ const MasterList = () => {
     return (
         <div className={classes.root} >
 
-            <Grid container spacing={3}>
+            <Grid container>
                 {currentMasters.map((master) => (
                     <MasterItem key={master.id} master={master} />
                 ))}

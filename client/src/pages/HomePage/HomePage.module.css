@@ -1,12 +1,10 @@
 .fullScreenContainer {
     background-image: url('grooming.png');
-    background-color: #D59DF5 ;
-    height: 100vh;
-    width: 100vw;
+    background-color: #D59DF5;
     background-size: cover;
     background-position: center;
     display: flex;
-    /*justify-content: center;*/
-    /*align-items: center;*/
-
+    overflow-y: auto;
+    min-height: 400px;
+    flex-grow: 1;
 }

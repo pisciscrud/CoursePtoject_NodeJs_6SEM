@@ -12,12 +12,10 @@ import MasterList from "../../componets/MasterList";
 
 const MasterPage = () => {
 
-    //const load
-
     return (
         <div className={styles.container}>
 
-            <Header></Header>
+            {/*<Header></Header>*/}
             <MasterList></MasterList>
         </div>
     );
