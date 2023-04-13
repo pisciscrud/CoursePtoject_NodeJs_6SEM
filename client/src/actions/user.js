@@ -76,3 +76,25 @@ catch (err)
 }
 
 }
+
+
+export const sendComment = async (  content, master_id, procedure_id)=>{
+    try
+    {
+        console.log('aaaaaa')
+       const date_=new Date();
+       const resp = axios.post('http://localhost:5000/api/comments/add',
+            {
+                date_,
+                content,
+                master_id,
+                procedure_id
+            },{headers: authHeader()})
+        return resp;
+    }
+    catch(err)
+    {
+        alert(err.response.data.message);
+    }
+
+}

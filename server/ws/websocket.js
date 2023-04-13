@@ -1,13 +1,34 @@
-const {Server} = require('socket.io');
+const io = require("socket.io");
+const {Server} = require("socket.io");
 
-//set up socket server on 8088 port . It's socket.io server
-const webSocketServer = new Server(9000, {
-    cors: {
-        origin: "*",
-        methods: ["GET", "POST"]
-    },
-    allowEIO3: true
-});
+let _io = null;
 
+function initWS(http) {
+    const io = new Server(http, {
+        cors: {
+            origin: '*'
+        }
+    });
 
-module.exports = webSocketServer;
+    io.on("connection", (socket) => {
+        //console.log(`⚡: ${socket.id} user just connected!`);
+
+        socket.on("disconnect", () => {
+           // console.log("🔥: A user disconnected");
+        });
+
+        socket.on("message", (message) => {
+            console.log("get message:", message);
+        });
+    });
+
+    _io = io
+   // console.log('init: my _io:', _io)
+}
+
+function getWS() {
+    //console.log('get: _io:', _io)
+    return _io;
+}
+
+module.exports = { initWS, getWS }

@@ -15,6 +15,7 @@ model Master {
   photo_master        String                @db.VarChar(100)
   Master_to_Procedure Master_to_Procedure[]
   Schedule            Schedule[]
+  Comments            Comments[]
 }
 
 model Master_to_Procedure {
@@ -51,6 +52,7 @@ model Procedure_table {
   Master_to_Procedure Master_to_Procedure[]
   Procedure_to_pet    Procedure_to_pet[]
   Schedule            Schedule[]
+  Comments            Comments[]
 }
 
 model Procedure_to_pet {
@@ -109,6 +111,7 @@ model User_table {
   Schedule     Schedule[]
   Role_table   Role_table     @relation(fields: [id_role], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_userrole")
   Notification Notification[]
+  Comments      Comments[]
 
   @@index([id_role], map: "fk_userrole")
 }
@@ -129,3 +132,19 @@ model Notification {
 
   @@index([user_id], map: "fk_notificationuser")
 }
+
+ model Comments {
+   id              String           @id @default(dbgenerated("(uuid())")) @db.Char(36)
+   date_           DateTime         @db.Date
+   content         String           @db.Text
+   user_id         String           @db.Char(36)
+   master_id       String           @db.Char(36)
+   procedure_id    String          @db.Char(36)
+   User_table      User_table       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_commentsofuser")
+   Master          Master          @relation(fields: [master_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_commentsofmaster")
+   Procedure_table Procedure_table @relation(fields: [procedure_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_commentsofschedule")
+
+   @@index([user_id], map: "fk_notificationuser")
+   @@index([master_id], map: "fk_commentsofmaster")
+   @@index([procedure_id], map: "fk_commentsofschedule")
+ }

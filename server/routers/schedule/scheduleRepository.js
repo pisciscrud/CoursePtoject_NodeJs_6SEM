@@ -209,6 +209,7 @@ class ScheduleRepository
                   time:true,
                   Procedure_table:{
                       select : {
+                          id:true,
                          name_procedure: true
                       }
                   },
@@ -216,6 +217,7 @@ class ScheduleRepository
                       {
                           select :
                               {
+                                  id:true,
                                   name_master:true,
                                   surname_master:true
                               }

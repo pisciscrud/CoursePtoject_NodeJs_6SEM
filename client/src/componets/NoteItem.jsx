@@ -1,10 +1,57 @@
 import React from 'react';
 import styles from './main.module.css'
+import CommentForm from "./CommentForm";
+import io from "socket.io-client";
+import {Button, CardMedia} from "@material-ui/core";
+
+
+import Dialog from '@material-ui/core/Dialog';
+import MuiDialogTitle from '@material-ui/core/DialogTitle';
+import MuiDialogContent from '@material-ui/core/DialogContent';
+import DialogActions from '@material-ui/core/DialogActions';
+import MuiDialogActions from '@material-ui/core/DialogActions';
+import IconButton from '@material-ui/core/IconButton';
+import CloseIcon from '@material-ui/icons/Close';
+import Typography from '@material-ui/core/Typography';
+import {withStyles} from "@material-ui/core/styles";
+import ProcedureRegistrationForm from "./ProcedureRegistrationForm";
+// Before the component definition:
+const socket = io.connect("http://localhost:5000");
+const DialogTitle = withStyles(styles)((props) => {
+    const { children, classes, onClose, ...other } = props;
+    return (
+        <MuiDialogTitle disableTypography className={classes.root} {...other}>
+            <Typography variant="h6">{children}</Typography>
+            {onClose ? (
+                <IconButton aria-label="close" className={classes.closeButton} onClick={onClose}>
+                    <CloseIcon />
+                </IconButton>
+            ) : null}
+        </MuiDialogTitle>
+    );
+});
+
+const DialogContent = withStyles((theme) => ({
+    root: {
+        padding: theme.spacing(2),
+        width: 500,
+    },
+}))(MuiDialogContent);
+
 
 
 
 const NoteItem = ({note}) => {
 
+
+    const [open, setOpen] = React.useState(false);
+
+    const handleClickOpen = () => {
+        setOpen(true);
+    };
+    const handleClose = () => {
+        setOpen(false);
+    };
     function  getTime(time) {
         const time1 = time.getFullYear()  +'-'+ time.getUTCMonth() + '-' + time.getUTCDate()
         return time1;
@@ -37,7 +84,11 @@ const NoteItem = ({note}) => {
             </p>
             {
                 note.Status.status_name==='Сompleted' &&
-                <input type='button' value='Get review'></input>
+                <Button  style={{
+                    margin:"10px"
+                }} variant="outlined" size="small" color="primary"  onClick={handleClickOpen}>
+               Get review
+                </Button>
             }
 
             <div className={styles.noteCardFooter}>
@@ -45,6 +96,33 @@ const NoteItem = ({note}) => {
 
                 <span>{note.time}</span>
             </div>
+
+            <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
+                <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                  Send comment
+                </DialogTitle>
+                <DialogContent >
+                    {/*<CardMedia  style={{width:"450px",height:"200px"}} className={classes.media}   image={`http://localhost:5000/${master.photo_master}`}></CardMedia>*/}
+                    <Typography gutterBottom>
+                        <p>
+                        Procedure: {note.Procedure_table.name_procedure}
+                        </p>
+                        <p>
+                         Master:   {note.Master.name_master}
+                        {note.Master.surname_master}
+                        </p>
+                    </Typography>
+                    <CommentForm
+                        //TODO only pets that can do this procedure
+                    note={note}
+                    />
+                </DialogContent >
+                <DialogActions>
+                    <Button autoFocus onClick={handleClose} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
         </div>
     )
 };

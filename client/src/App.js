@@ -15,9 +15,12 @@ import {LocalizationProvider} from "@mui/x-date-pickers";
 import ProfilePage from "./pages/ProfilePage/ProfilePage";
 import ScheduleList from "./pages/ScheduleList/ScheduleList";
 import MainPage from "./pages/MainPage/MainPage";
+import ReviewPage from "./pages/ReviewPage/ReviewPage";
 import PetsList from "./componets/PetsList";
-function App() {
+import io from "socket.io-client";
 
+const socket = io.connect("http://localhost:5000");
+function App() {
 
   return (
       <LocalizationProvider dateAdapter={AdapterDateFns}>
@@ -34,7 +37,7 @@ function App() {
                               <Route path="pets" element={<PetsList/>}></Route>
                           </Route>
                           <Route path="procedures" element={<ProcedurePage/>}></Route>
-
+                          <Route path="reviews" element={<ReviewPage />}></Route>
                       </Route>
                       <Route path="admin" element={<AdminPage/>}/>
                   </Routes>

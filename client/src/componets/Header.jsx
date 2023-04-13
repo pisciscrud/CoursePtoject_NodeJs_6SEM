@@ -19,6 +19,10 @@ const Header = () => {
                 <img src={PUBLIC_URL + '/888.png'} className={styles.icon}/>
                 <div className={styles.picon}>Master</div>
             </Link>
+            <Link className={styles.linkItem} to="reviews">
+                <img src={PUBLIC_URL + '/888.png'} className={styles.icon}/>
+                <div className={styles.picon}>Reviews of clients</div>
+            </Link>
 
 
 
