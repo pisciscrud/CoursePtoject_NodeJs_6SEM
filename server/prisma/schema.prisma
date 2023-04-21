@@ -135,7 +135,8 @@ model Notification {
 
  model Comments {
    id              String           @id @default(dbgenerated("(uuid())")) @db.Char(36)
-   date_           DateTime         @db.Date
+   date_           DateTime         @db.Timestamp
+   rating          Int              @db.Int
    content         String           @db.Text
    user_id         String           @db.Char(36)
    master_id       String           @db.Char(36)

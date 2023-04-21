@@ -17,7 +17,12 @@ import ScheduleList from "./pages/ScheduleList/ScheduleList";
 import MainPage from "./pages/MainPage/MainPage";
 import ReviewPage from "./pages/ReviewPage/ReviewPage";
 import PetsList from "./componets/PetsList";
+import PanelPage from "./pages/PanelPage/PanelPage";
+import ScheduleTable from "./componets/ScheduleTable";
+import SchedulePage from "./pages/SchedulePage/SchedulePage";
+
 import io from "socket.io-client";
+import ConfirmationPage from "./pages/ConfirmationPage/ConfirmationPage";
 
 const socket = io.connect("http://localhost:5000");
 function App() {
@@ -39,7 +44,20 @@ function App() {
                           <Route path="procedures" element={<ProcedurePage/>}></Route>
                           <Route path="reviews" element={<ReviewPage />}></Route>
                       </Route>
-                      <Route path="admin" element={<AdminPage/>}/>
+                      <Route path="admin" element={<AdminPage/>}>
+                          <Route path="" element={<HomePage/>}></Route>
+                          {/*<Route path="" element={<HomePage/>}></Route>*/}
+                          <Route path="masters"element={<MasterPage/>}></Route>
+                          <Route path="panel" element={<PanelPage/>}>
+
+                               <Route path="schedule" element={<ScheduleTable/>}></Route>
+                               <Route path="confirmation" element={<ConfirmationPage/>}></Route>
+
+
+                          </Route>
+                          <Route path="procedures" element={<ProcedurePage/>}></Route>
+                          <Route path="reviews" element={<ReviewPage />}></Route>
+                      </Route>
                   </Routes>
               </Router>
           </>

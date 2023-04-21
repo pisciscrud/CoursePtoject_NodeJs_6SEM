@@ -17,7 +17,7 @@ const Login = () => {
         await loginIn(login,password);
         const isAdm = await isAdmin()
         console.log(isAdm.data);
-        if (isAdm.data) {
+        if (isAdm) {
             navigate("/admin");
         }
         else {

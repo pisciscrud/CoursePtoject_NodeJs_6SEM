@@ -35,12 +35,12 @@ class MasterService {
         }
     }
 
-    async addMaster(name_master,surname_master,description,photo_master)
+    async addMaster(name_master,surname_master,description,photo_master,Master_to_Procedure)
     {
         try
         {
 
-            const master = this.masterRepository.createMaster(name_master,surname_master,description,photo_master);
+            const master = this.masterRepository.createMaster(name_master,surname_master,description,photo_master,Master_to_Procedure);
             return master;
         }
         catch (e)

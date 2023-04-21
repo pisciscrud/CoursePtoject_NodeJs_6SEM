@@ -25,6 +25,7 @@ import ProcedureRegistrationForm from "./ProcedureRegistrationForm"
 import axios from "axios";
 import { useQuery } from 'react-query';
 import {authHeader} from "../actions/procedure";
+import {isAdmin} from "../actions/user";
 
 const useStyles = makeStyles({
     root: {
@@ -77,12 +78,13 @@ const DialogContent = withStyles((theme) => ({
 
 
 
-const ProcedureItem = ({procedure, schedule}) => {
+const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
    const [masters, setMasters] = useState([])
     //const [availablePetType,setAvailablePetType]=useState([])
   const [pets,setPets]=useState([])
+
 
 
 
@@ -96,7 +98,11 @@ const ProcedureItem = ({procedure, schedule}) => {
         setOpen(false);
     };
 
-
+   const  handleDeleteProcedure = async () =>
+   {
+       const res = await onDeleteProcedure(procedure);
+       return res;
+   }
 
 
 
@@ -110,13 +116,20 @@ const ProcedureItem = ({procedure, schedule}) => {
                 }
             )
             .catch(error => console.log(error));
-        axios.get(`http://localhost:5000/api/procedures/petsOfUser/${procedure.id}`,{headers: authHeader()})
-            .then(response=>
-            {
-                console.log('ytn', response.data)
-                setPets(response.data)
 
-            })
+
+            if (!isAdm) {
+
+                axios.get(`http://localhost:5000/api/procedures/petsOfUser/${procedure.id}`, {headers: authHeader()})
+                    .then(response => {
+                        console.log('ytn', response.data)
+                        setPets(response.data)
+
+                    })
+            }
+            else {
+                setPets([]);
+            }
     }, []);
 
     // function filterPetsByType(pets, petType) {
@@ -138,13 +151,21 @@ const ProcedureItem = ({procedure, schedule}) => {
                         <h4>{procedure.description}</h4>
                     </CardContent>
                 </CardActionArea>
-                <Button  style={{
+                { !isAdm ?  <Button  style={{
                     backgroundColor:"#111F75",
                     margin:"10px",
                     color:"white"
                 }} onClick={handleClickOpen}>
                    Get service
-                </Button>
+                </Button> :
+                    <Button  style={{
+                        backgroundColor:"#111F75",
+                        margin:"10px",
+                        color:"white"
+                    }} onClick={handleDeleteProcedure}>
+                       Delete
+                    </Button>
+                }
             </Card>
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>

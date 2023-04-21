@@ -54,14 +54,26 @@ class MasterRepository {
 
     }
 
-    async createMaster(name_master, surname_master, description,photo_master) {
+    async createMaster(name_master, surname_master, description,photo_master,Master_to_Procedure) {
         try {
+            const arr =JSON.parse(Master_to_Procedure);
+
+            const result = arr.map(obj => {
+                const key = Object.keys(obj)[0].replace(/'/g, '').trim();
+                const value = obj[key];
+                return {[key]: value};
+            });
+
             const master = await this.prismaClient.Master.create({
                 data: {
                     name_master: name_master,
                     surname_master:surname_master,
                     description: description,
-                    photo_master: photo_master
+                    photo_master: photo_master,
+                    Master_to_Procedure:
+                        {
+                            create:result
+                        }
                 }
             })
             return master;

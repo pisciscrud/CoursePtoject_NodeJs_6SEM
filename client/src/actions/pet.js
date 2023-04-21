@@ -3,6 +3,7 @@ import axios from "axios";
 export const getPetTypes = async ()=>
 {
     const res = await axios.get('http://localhost:5000/api/pets/types')
+    console.log('types',res.data)
     return res.data;
 }
 function authHeader() {

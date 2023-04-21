@@ -10,7 +10,13 @@ class ProcedureRepository {
 
     async findAll() {
         try {
-            const procedures = await this.prismaClient.Procedure_table.findMany()
+            const procedures = await this.prismaClient.Procedure_table.findMany({
+                    include:
+                        {
+                            Procedure_to_pet:true,
+                        }
+                }
+            )
             return procedures;
         } catch (e) {
             throw createError(500, "Db error:" + e.message);
@@ -22,12 +28,11 @@ class ProcedureRepository {
         try {
 
             const arr = JSON.parse(Procedure_to_pet);
-
-            const result = arr.map(obj => {
-                const key = Object.keys(obj)[0].replace(/'/g, '').trim();
-                const value = obj[key];
-                return {[key]: value};
+            const result = arr.map(pet => {
+                return { pet_id: Number(pet.pet_id) };
             });
+
+            console.log(result);
 
             const procedureWithSameName = await this.prismaClient.Procedure_table.findFirst(
                 {where: {name_procedure: name_procedure}}
@@ -47,6 +52,7 @@ class ProcedureRepository {
                         }
                     }
                 )
+                return procedure;
             } else {
                 throw createError(500, 'Db error: such procedure in database')
             }

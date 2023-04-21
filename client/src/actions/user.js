@@ -54,7 +54,7 @@ export const isAdmin = async ()=>
   const res = await axios.get(`${API_URL}admin`, {headers: authHeader()});
   console.log(res);
 
-  return res;
+  return res.data;
 }
 
 
@@ -78,14 +78,16 @@ catch (err)
 }
 
 
-export const sendComment = async (  content, master_id, procedure_id)=>{
+export const sendComment = async (  content,rating, master_id, procedure_id)=>{
     try
     {
-        console.log('aaaaaa')
+     console.log('rat',rating);
        const date_=new Date();
+       console.log(date_)
        const resp = axios.post('http://localhost:5000/api/comments/add',
             {
                 date_,
+                rating,
                 content,
                 master_id,
                 procedure_id

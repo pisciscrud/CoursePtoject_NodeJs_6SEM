@@ -16,6 +16,31 @@ class   CommentRepository {
 
             const comments = await this.prismaClient.Comments.findMany(
                 {
+
+                  include :
+                        {
+                            Procedure_table:
+                                {
+                                    select :
+                                        {
+                                            name_procedure: true
+                                        }
+                                },
+                            Master:{
+                                select:
+                                    {
+                                        name_master:true,
+                                        surname_master:true
+                                    }
+                            },
+                            User_table:
+                                {
+                                    select :
+                                        {
+                                            full_name:true
+                                        }
+                                }
+                        },
                     orderBy: [
                         {
                             date_: 'desc',
@@ -29,19 +54,47 @@ class   CommentRepository {
 
     }
 
-    async createComment(date_, content, user_id, master_id, procedure_id)
+    async createComment(date_, rating,  content, user_id, master_id, procedure_id)
     {
         try
         {
+
+            console.log('AAAAA',rating);
+
             const comment = await this.prismaClient.Comments.create(
                 {
                     data:
                         {
                             date_,
+                            rating,
                             content,
                             user_id ,
                             master_id,
                             procedure_id
+                        },
+                    include :
+                        {
+                            Procedure_table:
+                                {
+                                    select :
+                                        {
+                                            name_procedure: true
+                                        }
+                                },
+                            Master:{
+                                select:
+                                    {
+                                        name_master:true,
+                                        surname_master:true
+                                    }
+                            },
+                            User_table:
+                                {
+                                    select :
+                                        {
+                                            full_name:true
+                                        }
+                                }
                         }
 
                 }

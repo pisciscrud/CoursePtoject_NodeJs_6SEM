@@ -31,9 +31,9 @@ commentRouter.post('/add',roleMiddleware (["user"]),async (req,res,next)=>
     try
     {
         const idUser= req.userId;
-        const {date_, content, master_id, procedure_id} =req.body;
-        const comment = await commentService.addComment(date_, content, idUser, master_id, procedure_id);
-        console.log('comment',comment)
+        const {date_, rating, content, master_id, procedure_id} =req.body;
+        console.log('rep rating',rating)
+        const comment = await commentService.addComment(date_,rating, content, idUser, master_id, procedure_id);
         ws.emit('new-comment',{comment});
         res.json(comment);
     }

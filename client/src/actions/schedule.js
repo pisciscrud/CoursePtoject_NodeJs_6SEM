@@ -3,7 +3,7 @@ import axios from "axios";
 
 export const getSchedule =async()=> {
 
-  const records =await   axios.get('http://localhost:5000/api/schedule/')
+  const records =await   axios.get('http://localhost:5000/api/schedule/all')
     console.log('schedule', records.data)
     return records.data;
        /* .then(response => {

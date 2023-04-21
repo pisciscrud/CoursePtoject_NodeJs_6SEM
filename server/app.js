@@ -14,17 +14,25 @@ const http = require("http");
 // const {initWS} = require("./ws/websocket");
 const {Server} = require("socket.io");
 const {initWS} = require("./ws/websocket");
+const multer = require("multer");
 
 const app = express();
 const httpServer = http.createServer(app);
 
+
 app.use(require('cors')());
 
+app.use(
+    bodyParser.urlencoded({
+        extended: true,
+    })
+);
+app.use(bodyParser. text({type: '/'}));
 app.use(express.json());
 app.use(express.static(__dirname + '/static'));
-app.use(fileUpload({}))
+//app.use(fileUpload({}))
 
-app.use(bodyParser.urlencoded({extended:false}));
+//app.use(bodyParser.urlencoded({extended:false}));
 app.use(bodyParser.json());
 
 app.use('/api/auth',authRouter);

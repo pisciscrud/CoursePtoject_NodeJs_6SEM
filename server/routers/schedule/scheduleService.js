@@ -23,6 +23,24 @@ class ScheduleService
     }
 
 
+    async getCurrentDay()
+    {
+        try
+        {
+            const now = new Date();
+            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // разница в миллисекундах между UTC и локальным временем
+            const today = new Date(now.getTime() - (now.getTime() + timezoneOffset) % (24 * 60 * 60 * 1000));
+            const t = today.setUTCHours(0);
+            console.log('today',t)
+            const res = await this.scheduleRepository.getAllRecordsOfDate(today);
+            return res;
+        }
+        catch(e)
+        {
+
+        }
+    }
+
     async  getRecordsOfUser(idUser)
     {
         try
@@ -39,12 +57,26 @@ class ScheduleService
     {
         try
         {
-            return  await this.scheduleRepository.getAllRecordss();
+            return  await this.scheduleRepository.getRecords()
         }
         catch (e)
         {}
 
     }
+
+
+    async getWaitingRecords()
+    {
+        try {
+            return await this.scheduleRepository.getWaitingRecords();
+        }
+        catch (e)
+        {
+
+        }
+
+    }
+
 
     async getRecordsForProcedure(id)
     {
@@ -56,6 +88,17 @@ class ScheduleService
         {}
     }
 
+
+    async confirmRecord(status_id,record_id)
+    {
+        try
+        {
+            return await this.scheduleRepository.confirmByAdmin(status_id,record_id)
+
+        }
+        catch (e)
+        {}
+    }
 
 
 }

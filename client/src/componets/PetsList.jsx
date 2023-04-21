@@ -66,6 +66,7 @@ const PetsList = () => {
     const {refetch:refetchPetTypes,data:petTypes}=useQuery("petTypes",()=>getPetTypes())
 
 
+
     useEffect(()=>
     {
         refetchPets()

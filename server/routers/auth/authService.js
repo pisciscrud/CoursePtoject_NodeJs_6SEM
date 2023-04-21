@@ -48,9 +48,9 @@ class AuthService {
     async isAdmin(token) {
 
         const {roleId} = await jwt.verify(token, process.env.SECRET_KEY);
-        console.log('roleId from authService' + roleId);
+     //   console.log('roleId from authService' + roleId);
         const role = await this.authRepository.findRoleById(roleId);
-        console.log('ROLE' + role.Role_name);
+        //console.log('ROLE' + role.Role_name);
         const admin = (role.Role_name === "admin") ? true : false;
         return admin;
 

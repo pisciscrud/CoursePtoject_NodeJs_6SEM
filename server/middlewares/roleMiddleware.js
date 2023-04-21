@@ -4,13 +4,13 @@ const AuthRepository = require("../routers/auth/authRepository");
 
 module.exports = function (roles) {
     return async function (req, res, next) {
-        console.log('middleware')
+
         if (req.method === "OPTIONS") {
             next()
         }
         const authRepository=new AuthRepository();
         try {
-           console.log('aaa');
+
             const token = req.headers.authorization.split(' ')[1]
             if (!token) {
                 return res.status(403).json({message: "Пользователь не авторизован"})

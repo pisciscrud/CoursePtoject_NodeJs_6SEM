@@ -1,13 +1,21 @@
 const express = require('express');
 const uuid = require('uuid');
 const path = require('path');
+const fs = require('fs')
+const multer = require('multer');
+const bodyParser = require('body-parser');
+
+
+
+
 const procedureRouter = express.Router();
 
 const ProcedureService=require("./procedureService")
 const roleMiddleware = require("../../middlewares/roleMiddleware");
 
 const procedureService=new ProcedureService();
-
+const upload = multer({ dest: 'static/' });
+//procedureRouter.use(bodyParser.urlencoded({ extended: true }));
 
 procedureRouter.get('',async (req,res,next)=>{
     try
@@ -27,14 +35,18 @@ procedureRouter.get('',async (req,res,next)=>{
 
 
 
-procedureRouter.post('', roleMiddleware(["admin"]),async(req,res,next)=>
+procedureRouter.post('', roleMiddleware(["admin"]),  upload.single('image') , async(req,res,next)=>
 {
   try {
+
+     console.log('body',req.body);
       const {name_procedure, Price, description,Procedure_to_pet} = req.body;
-      console.log(Procedure_to_pet);
-      const {img} = req.files;
-      let procedure_photo = uuid.v4() + ".png";
-      img.mv(path.resolve(__dirname, '../..', 'static', procedure_photo));
+   console.log('files',req.file.filename)
+        const procedure_photo=req.file.filename;
+
+    //  console.log('img',img)
+    //   // let procedure_photo = uuid.v4() + ".png";
+    //   // img.mv(path.resolve(__dirname, '../..', 'static', procedure_photo));
       const procedure = await procedureService.createProcedure(name_procedure, Price, description, procedure_photo,Procedure_to_pet);
 
       return res.json(procedure);

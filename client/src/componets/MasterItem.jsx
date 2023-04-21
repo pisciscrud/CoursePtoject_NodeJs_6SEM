@@ -64,7 +64,7 @@ const DialogContent = withStyles((theme) => ({
 
 
 
-const MasterItem = ({master}) => {
+const MasterItem = ({master,isAdm,onDeleteMaster}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
 
@@ -74,6 +74,13 @@ const MasterItem = ({master}) => {
     const handleClose = () => {
         setOpen(false);
     };
+
+    const  handleDeleteMaster = async () =>
+    {
+        const res = await onDeleteMaster(master);
+        return res;
+    }
+
     return (
 
 
@@ -94,6 +101,13 @@ const MasterItem = ({master}) => {
                     }} variant="outlined" size="small" color="primary"  onClick={handleClickOpen}>
                         Learn More
                     </Button>
+                    {
+                        isAdm && <Button style={{
+                            backgroundColor:"#111F75",
+                            margin:"10px",
+                            color:"white"
+                        }} onClick={handleDeleteMaster}>Delete</Button>
+                    }
                 </CardActionArea>
             </Card>
 

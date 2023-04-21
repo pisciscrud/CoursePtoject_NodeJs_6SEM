@@ -5,11 +5,12 @@ const masterRouter = express.Router();
 
 const MasterService = require("./masterService")
 const roleMiddleware = require("../../middlewares/roleMiddleware");
+const multer = require("multer");
 
 
 const masterService = new MasterService();
 
-
+const upload = multer({ dest: 'static/' });
 masterRouter.get('', async (req, res, next) => {
 
     try {
@@ -34,17 +35,17 @@ masterRouter.get('/:id', async (req, res, next) => {
 })
 
 
-masterRouter.post('/add',roleMiddleware(["admin"]),async (req,res,next) =>
+masterRouter.post('/add',roleMiddleware(["admin"]),upload.single('image') ,async (req,res,next) =>
 {
     try {
 
-        const {name_master,surname_master,description} = req.body;
+        const {name_master,surname_master,description,Master_to_Procedure} = req.body;
         console.log(req.body);
-        const {img} =req.files;
 
-        let photo_master = uuid.v4() + ".png";
-        img.mv(path.resolve(__dirname, '../..', 'static', photo_master));
-        const master = await masterService.addMaster(name_master,surname_master,description,photo_master);
+
+        let photo_master = req.file.filename;
+
+        const master = await masterService.addMaster(name_master,surname_master,description,photo_master,Master_to_Procedure);
         res.json(master);
 
 

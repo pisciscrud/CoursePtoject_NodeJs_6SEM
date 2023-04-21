@@ -110,20 +110,20 @@ class ScheduleRepository
         }
     }
 
- async confirmByAdmin(idRecord,idStatus)
+ async confirmByAdmin(status_id,record_id)
  {
-
+     console.log('st',status_id)
      try
      {
        const updateRecord = await this.prismaClient.schedule.update({
            where:{
-               id :idRecord
+               id :record_id
            },
            data :{
-               status_id:idStatus
+               status_id: status_id
            }
        })
-
+           console.log('update',updateRecord)
          return updateRecord;
 
 
@@ -134,6 +134,79 @@ class ScheduleRepository
          throw createError(500,"Db Error"+e.message);
      }
 
+ }
+
+ async getWaitingRecords ()
+ {
+     try
+     {
+         const records = await this.prismaClient.schedule.findMany(
+             {
+                 where:
+                     {
+                         status_id: 1
+
+                     },
+                 include:
+                     {
+                         Procedure_table:true,
+                         User_table:
+                             {
+                                 select :
+                                     {
+                                         full_name:true,
+                                     }
+                             },
+                         Master:true,
+                         Pet:true
+                     }
+             })
+         return records;
+     }
+     catch (e)
+     {
+         throw createError(500,"Db Error"+e.message);
+     }
+ }
+
+
+
+
+ async getRecords()
+ {
+     try
+     {
+         const records = await this.prismaClient.schedule.findMany(
+             {
+                 where :
+                     {
+                         status_id:
+                             {
+                                 not : 3
+                             }
+                     },
+                 include:
+                    {
+                        Procedure_table:true,
+                        User_table:
+                            {
+                                select :
+                                    {
+                                        full_name:true,
+                                    }
+                            },
+                        Master:true,
+                        Pet:true
+                    }
+             }
+         )
+         return records;
+
+     }
+     catch(e)
+     {
+         throw createError(500,"Db Error"+e.message);
+     }
  }
 
  async deleteRecord(idRecord)
@@ -155,11 +228,22 @@ class ScheduleRepository
 
  }
 
- async getAllRecordss(){
+ async getAllRecordsOfDate(date){
         try
         {
+         const records =   await this.prismaClient.Schedule.findMany(
+             {
+                where:{
+                    date_:date
+                },
+                include:
+                {
+                    User_table: true,
+                        Procedure_table: true
+                }
 
-         const records =   await this.prismaClient.Schedule.findMany()
+            }
+         )
             return records;
         }
         catch (e)
@@ -168,6 +252,8 @@ class ScheduleRepository
 
         }
  }
+
+
 
 
  async getRecordsForProcedures(id)

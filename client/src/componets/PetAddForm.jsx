@@ -17,7 +17,7 @@ const PetAddForm = ({petTypes}) => {
    {
        try
        {
-           const res = addPet(petType.id,age,nickname)
+           const res = await addPet(petType.id,age,nickname)
            console.log(res);
 
        }
