@@ -19,12 +19,14 @@ import ReviewPage from "./pages/ReviewPage/ReviewPage";
 import PetsList from "./componets/PetsList";
 import PanelPage from "./pages/PanelPage/PanelPage";
 import ScheduleTable from "./componets/ScheduleTable";
+
+import NotificationPage from "./pages/NotificationPage/NotificationPage";
 import SchedulePage from "./pages/SchedulePage/SchedulePage";
 
 import io from "socket.io-client";
 import ConfirmationPage from "./pages/ConfirmationPage/ConfirmationPage";
 
-const socket = io.connect("http://localhost:5000");
+//const socket = io.connect("http://localhost:5000");
 function App() {
 
   return (
@@ -40,6 +42,7 @@ function App() {
                           <Route path="profile" element={<ProfilePage/>}>
                               <Route path="schedule" element={<ScheduleList/>}></Route>
                               <Route path="pets" element={<PetsList/>}></Route>
+                              <Route path="notifications" element={<NotificationPage/>}></Route>
                           </Route>
                           <Route path="procedures" element={<ProcedurePage/>}></Route>
                           <Route path="reviews" element={<ReviewPage />}></Route>
@@ -52,7 +55,7 @@ function App() {
 
                                <Route path="schedule" element={<ScheduleTable/>}></Route>
                                <Route path="confirmation" element={<ConfirmationPage/>}></Route>
-
+                              <Route path="notifications" element={<NotificationPage/>}></Route>
 
                           </Route>
                           <Route path="procedures" element={<ProcedurePage/>}></Route>

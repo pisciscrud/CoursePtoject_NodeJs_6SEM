@@ -137,7 +137,7 @@ const MasterList = () => {
             }
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
                 <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                    Add pet
+                    Add Master
                 </DialogTitle>
                 <DialogContent >
                     <MasterAddForm  onAdd={handleAddMaster} procedures={procedures}></MasterAddForm>

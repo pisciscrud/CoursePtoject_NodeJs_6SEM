@@ -35,6 +35,22 @@ masterRouter.get('/:id', async (req, res, next) => {
 })
 
 
+
+
+masterRouter.get('/rating/:id',async(req,res,next)=>{
+    try {
+
+        const id = req.params.id;
+        const rating = await masterService.getRatingOfMaster(id);
+        res.json(rating);
+    }
+    catch (e) {
+        next(e);
+    }
+})
+
+
+
 masterRouter.post('/add',roleMiddleware(["admin"]),upload.single('image') ,async (req,res,next) =>
 {
     try {

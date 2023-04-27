@@ -1,26 +1,61 @@
 const io = require("socket.io");
 const {Server} = require("socket.io");
+const jwt = require('jsonwebtoken');
 
 let _io = null;
 
+
+
+
+
+
 function initWS(http) {
-    const io = new Server(http, {
+
+  const  io = new Server(http, {
         cors: {
             origin: '*'
         }
     });
 
-    io.on("connection", (socket) => {
-        //console.log(`⚡: ${socket.id} user just connected!`);
 
-        socket.on("disconnect", () => {
-           // console.log("🔥: A user disconnected");
-        });
 
-        socket.on("message", (message) => {
-            console.log("get message:", message);
-        });
-    });
+    io.on('connection', (socket) => {
+      //  console.log(`⚡: ${socket.id} user just connected!`);
+        if (socket.handshake.query.channel === 'new-notification') {
+            console.log(`⚡: ${socket.id} user just connected!`);
+            const token = socket.handshake.auth.token // read JWT token from auth object
+            console.log(socket.userId);
+            const decoded = jwt.verify(token, process.env.SECRET_KEY) // verify token
+            const userId = decoded.id //
+            socket.userId = userId
+            console.log('socket_user',socket.userId);
+            // Send the payload to the client
+
+        }
+    })
+    io.on("disconnect", () => {
+                console.log("🔥: A user disconnected");
+           });
+
+    // io.on("new-notification", (socket) => {
+    //     console.log(`⚡: ${socket.id} user just connected!`);
+    //     const token = socket.handshake.auth.token // read JWT token from auth object
+    //     console.log(socket.handshake);
+    //     const decoded = jwt.verify(token, process.env.SECRET_KEY) // verify token
+    //     const userId = decoded.id // extract user ID from decoded token
+    //
+    //     // set the userId property on the socket object
+    //     socket.userId = userId
+    //
+    // })
+    //     socket.on("disconnect", () => {
+    //        // console.log("🔥: A user disconnected");
+    //     });
+    //
+    //     socket.on("message", (message) => {
+    //         console.log("get message:", message);
+    //     });
+    // });
 
     _io = io
    // console.log('init: my _io:', _io)
@@ -31,4 +66,27 @@ function getWS() {
     return _io;
 }
 
-module.exports = { initWS, getWS }
+async function emitNotification(io, userId, notification)
+{
+
+
+   // console.log(io.sockets.sockets)
+   //  const sockets = await io.in(`user_${userId}`).allSockets();
+   //   // console.log(sockets)
+   //  if (sockets.size > 0) {
+   //      sockets.forEach(socketId => {
+   //          io.to(socketId).emit('new-notification', notification);
+   //      });
+   //  }
+
+        //const socket = io.sockets.sockets.find(socket => socket.userId === userId)
+        //  console.log('socket',socket)
+        // if (socket) {
+        //     socket.to(socket.userId).emit('new-notification', notification)
+        //    // socket.emit('new-notification', notification)
+        // }
+
+}
+
+
+module.exports = { initWS, getWS,emitNotification }

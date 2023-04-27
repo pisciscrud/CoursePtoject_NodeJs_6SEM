@@ -9,7 +9,7 @@ import {useQuery} from "react-query";
 import {getSchedule} from "../../actions/schedule";
 import {GetWaitingRecords} from "../../actions/admin";
 import ConfirmationItem from "../../componets/ConfirmationItem";
-
+import socket from '../../socket'
 const ConfirmationPage = () => {
 
 
@@ -31,6 +31,7 @@ const ConfirmationPage = () => {
             .then((data) => {
                 console.log('refetch',data.data);
                 setRecords(data.data)})
+
     },[records])
 
     const onConfirm = async (record_id)=>

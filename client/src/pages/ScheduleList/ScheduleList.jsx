@@ -4,13 +4,26 @@ import {getNotesOfUser} from "../../actions/user";
 
 import {Grid} from "@material-ui/core";
 import NoteItem from "../../componets/NoteItem";
+import axios from 'axios'
+import socket from "../../socket";
+
+
 
 const ScheduleList = () => {
 
     const [notes,setNotes]=useState([]);
     const {refetch:refetchNotes}=useQuery("notes",()=>getNotesOfUser())
+
+
     useEffect(()=>
     {
+        axios.get('http://localhost:5000/api/schedule/update-records')
+            .then(response => {
+              //  console.log(`Updated ${response.data} records!`);
+            })
+            .catch(error => {
+               // console.error('Failed to update records:', error);
+            });
         refetchNotes()
             .then((data) => {
                 console.log('refetch',data.data);

@@ -132,11 +132,7 @@ const ProcedureList = () => {
                         <ProcedureAddForm  onAdd={handleAddProcedure} petTypes={petTypes}></ProcedureAddForm>
 
                     </DialogContent >
-                    <DialogActions>
-                        <Button autoFocus onClick={handleClose} color="primary">
-                            Close
-                        </Button>
-                    </DialogActions>
+
                 </Dialog>
 
             </div>

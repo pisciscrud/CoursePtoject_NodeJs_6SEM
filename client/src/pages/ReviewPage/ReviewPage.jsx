@@ -15,22 +15,14 @@ const ReviewPage = () => {
     useEffect(()=>{
         refetchComments()
             .then((data) => {
-                console.log('refetch',data.data);
+
                 setComments(data.data)
             })
         socket.on('new-comment',(data)=>{
-            console.log('data',data.comment);
+
             setComments((comments)=>[...comments,data.comment])})
 
-        //
-        // socket.on('new-comment',({comment})=>
-        // {
-        //     setComments((comments)=>[...comments,comment]);
-        // })
-        //
-        // return () => {
-        //     socket.off("new-comment");
-        // };
+
     },[])
     return (
         <div>

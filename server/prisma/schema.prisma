@@ -86,6 +86,11 @@ model Schedule {
   Master          Master          @relation(fields: [master_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_schedulemaster")
   Status          Status          @relation(fields: [status_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_statusschedule")
   User_table      User_table      @relation(fields: [owner_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_userschedule")
+  Comments      Comments[]
+
+
+
+
 
   @@index([pet_id], map: "fk_petschedule")
   @@index([procedure_id], map: "fk_procedureschedule")
@@ -125,7 +130,7 @@ model pettype {
 
 model Notification {
   id         String     @id @default(dbgenerated("(uuid())")) @db.Char(36)
-  date_      DateTime   @db.Date
+  date_      DateTime   @db.Timestamp
   accepted   Boolean    @default(false)
   user_id    String     @db.Char(36)
   User_table User_table @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_notificationuser")
@@ -135,6 +140,7 @@ model Notification {
 
  model Comments {
    id              String           @id @default(dbgenerated("(uuid())")) @db.Char(36)
+   record_id       String           @db.Char(36)
    date_           DateTime         @db.Timestamp
    rating          Int              @db.Int
    content         String           @db.Text
@@ -144,8 +150,10 @@ model Notification {
    User_table      User_table       @relation(fields: [user_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_commentsofuser")
    Master          Master          @relation(fields: [master_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_commentsofmaster")
    Procedure_table Procedure_table @relation(fields: [procedure_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_commentsofschedule")
+   Schedule       Schedule        @relation(fields: [record_id], references: [id], onDelete: Cascade, onUpdate: NoAction, map: "fk_commentsofrecord")
 
    @@index([user_id], map: "fk_notificationuser")
    @@index([master_id], map: "fk_commentsofmaster")
    @@index([procedure_id], map: "fk_commentsofschedule")
+   @@index([record_id],map:"fk_commentsofrecord")
  }

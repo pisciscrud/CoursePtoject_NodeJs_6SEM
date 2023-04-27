@@ -21,6 +21,15 @@ class MasterService {
         }
 
     }
+    async getRatingOfMaster(masterId)
+    {
+        try
+        {
+            return this.masterRepository.avgRating(masterId)
+        }
+        catch (e)
+        {}
+    }
 
     async getInfoAboutMaster(id)
     {

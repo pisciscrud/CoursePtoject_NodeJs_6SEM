@@ -78,10 +78,10 @@ catch (err)
 }
 
 
-export const sendComment = async (  content,rating, master_id, procedure_id)=>{
+export const sendComment = async (  content,rating, master_id, procedure_id,record_id)=>{
     try
     {
-     console.log('rat',rating);
+     console.log('record_id',record_id);
        const date_=new Date();
        console.log(date_)
        const resp = axios.post('http://localhost:5000/api/comments/add',
@@ -90,7 +90,8 @@ export const sendComment = async (  content,rating, master_id, procedure_id)=>{
                 rating,
                 content,
                 master_id,
-                procedure_id
+                procedure_id,
+                record_id
             },{headers: authHeader()})
         return resp;
     }

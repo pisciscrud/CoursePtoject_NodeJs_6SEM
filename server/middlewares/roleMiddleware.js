@@ -22,7 +22,7 @@ module.exports = function (roles) {
 
             roles.forEach(role=>
             {
-                if (role == role1.Role_name)
+                if (role === role1.Role_name)
                     hasRole=true
             })
             if (!hasRole) {

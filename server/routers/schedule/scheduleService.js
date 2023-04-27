@@ -21,6 +21,13 @@ class ScheduleService
         console.log(e.message)
         }
     }
+    async updateStatusRecord()
+    {
+
+      return  await this.scheduleRepository.updateRecords();
+    }
+
+
 
 
     async getCurrentDay()
@@ -93,12 +100,16 @@ class ScheduleService
     {
         try
         {
-            return await this.scheduleRepository.confirmByAdmin(status_id,record_id)
-
+             const {updateRecord,createdNotification}=  await this.scheduleRepository.confirmByAdmin(status_id,record_id)
+             return {updateRecord,createdNotification}
         }
         catch (e)
-        {}
-    }
+        {
+            console.log('Error occurred while confirming record with ID:', record_id, 'Error:', error.message);
+           // throw createError(500, "Database error occurred while confirming record!");
+        }
+        }
+
 
 
 }

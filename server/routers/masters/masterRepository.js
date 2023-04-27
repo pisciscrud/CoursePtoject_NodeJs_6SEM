@@ -35,6 +35,19 @@ class MasterRepository {
 
     }
 
+async  avgRating(masterId) {
+    const avgRating = await this.prismaClient.Comments.aggregate({
+        where: {
+            master_id: masterId,
+        },
+
+        _avg: {
+            rating: true,
+        },
+    });
+    return avgRating
+
+}
 
     async findMaster(id) {
         try {

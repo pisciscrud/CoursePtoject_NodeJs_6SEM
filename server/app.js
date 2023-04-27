@@ -9,6 +9,7 @@ const procedureRouter = require('./routers/procedures/procedureRouter')
 const petsRouter = require('./routers/pets/PetRouter');
 const scheduleRouter= require('./routers/schedule/scheduleRouter')
 const commentsRouter=require('./routers/Comments/CommentRouter')
+const notificationRouter=require('./routers/notification/NotificationRouter')
 const createWebSocketServer = require('./ws/websocket');
 const http = require("http");
 // const {initWS} = require("./ws/websocket");
@@ -41,6 +42,7 @@ app.use('/api/procedures',procedureRouter);
 app.use('/api/pets',petsRouter);
 app.use('/api/schedule',scheduleRouter);
 app.use('/api/comments',commentsRouter);
+app.use('/api/notifications',notificationRouter)
 
 initWS(httpServer)
 httpServer.listen(5000,()=>{console.log("Server starts on 5000")})

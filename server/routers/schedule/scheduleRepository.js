@@ -112,7 +112,7 @@ class ScheduleRepository
 
  async confirmByAdmin(status_id,record_id)
  {
-     console.log('st',status_id)
+     //console.log('st',status_id)
      try
      {
        const updateRecord = await this.prismaClient.schedule.update({
@@ -123,8 +123,29 @@ class ScheduleRepository
                status_id: status_id
            }
        })
-           console.log('update',updateRecord)
-         return updateRecord;
+
+
+
+
+
+
+         //TODO send notifications
+
+             const createdNotification = await this.prismaClient.Notification.create(
+                 {
+                     data:
+                         {
+                             date_  : new Date(),
+                             accepted : false,
+                             user_id:updateRecord.owner_id,
+
+
+                         }
+                 }
+             )
+
+         //  console.log('update',updateRecord)
+         return {updateRecord,createdNotification};
 
 
      }
@@ -170,6 +191,26 @@ class ScheduleRepository
  }
 
 
+
+
+ async updateRecords()
+ {
+     try
+     {
+         const recordsToUpdate = await this.prismaClient.Schedule.findMany({
+             where: { date_: { lte: new Date() } },
+         });
+
+         const updatedRecords = await this.prismaClient.Schedule.updateMany({
+             where: { id: { in: recordsToUpdate.map(record => record.id) } },
+             data: { status_id: 4 },
+         });
+     }
+     catch(e)
+     {
+         throw createError(500,"Db Error"+e.message);
+     }
+ }
 
 
  async getRecords()
@@ -324,7 +365,7 @@ class ScheduleRepository
 
               }
         })
-         console.log(records)
+        // console.log(records)
       return records;
      }
      catch (e)

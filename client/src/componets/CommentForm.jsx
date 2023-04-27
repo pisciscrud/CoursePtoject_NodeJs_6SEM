@@ -12,7 +12,7 @@ const CommentForm = ({note}) => {
    {
        try
        {
-           const res = await sendComment(content,rating,note.Master.id,note.Procedure_table.id)
+           const res = await sendComment(content,rating,note.Master.id,note.Procedure_table.id,note.id)
            //socket.emit('new-comment',{});
        }
        catch (e)

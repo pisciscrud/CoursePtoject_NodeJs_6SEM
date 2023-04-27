@@ -25,3 +25,17 @@ export const deleteMaster =async(id)=>
     }
 
 }
+
+export const ratingMaster = async(id)=>
+{
+    try
+    {
+       const res = await axios.get(`http://localhost:5000/api/masters/rating/${id}`)
+    console.log(res.data._avg)
+        return res.data._avg;
+    }
+    catch (e)
+    {
+        console.log(e);
+    }
+}

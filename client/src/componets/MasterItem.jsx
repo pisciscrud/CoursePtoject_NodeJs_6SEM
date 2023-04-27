@@ -1,4 +1,4 @@
-import React from 'react';
+import React, {useEffect,useState} from 'react';
 import {Row} from "react-bootstrap";
 
 import { withStyles } from '@material-ui/core/styles';
@@ -12,6 +12,9 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import {useQuery} from "react-query";
+import {ratingMaster} from "../actions/master";
+import RatingFromBd from "./RatingFromBd";
 
 
 const useStyles = makeStyles({
@@ -67,6 +70,16 @@ const DialogContent = withStyles((theme) => ({
 const MasterItem = ({master,isAdm,onDeleteMaster}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+  //  const [ratMaster,setRatMaster]=useState([]);
+    const {refetch:refetchRatMaster,data:ratMaster}=useQuery('refetchRatingMaster',()=>ratingMaster(master.id));
+    // useEffect(() => {
+    //
+    //
+    //     refetchRatMaster()
+    //         .then((data)=>{
+    //             setRatMaster(data.data)})
+    // }, [ratMaster]);
+
 
     const handleClickOpen = () => {
         setOpen(true);
@@ -131,6 +144,9 @@ const MasterItem = ({master,isAdm,onDeleteMaster}) => {
                     {info.Procedure_table.name_procedure}
                 </li>)}</p>
             </Typography>
+            { ratMaster &&
+            <RatingFromBd rating={ratMaster.rating} />
+            }
         </DialogContent>
         <DialogActions>
             <Button autoFocus onClick={handleClose} color="primary">

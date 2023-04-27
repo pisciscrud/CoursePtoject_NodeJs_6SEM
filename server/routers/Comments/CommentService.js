@@ -21,11 +21,11 @@ class CommentService
         }
     }
 
-    async addComment(date_, rating, content, user_id, master_id, procedure_id)
+    async addComment(date_, rating, content, user_id, master_id, procedure_id,record_id)
     {
         try
         {
-            return this.commentRepository.createComment(date_, rating, content, user_id, master_id, procedure_id)
+            return this.commentRepository.createComment(date_, rating, content, user_id, master_id, procedure_id,record_id)
         }
         catch(e)
         {

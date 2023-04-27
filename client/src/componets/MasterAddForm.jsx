@@ -89,11 +89,14 @@ const MasterAddForm = ({procedures,onAdd}) => {
               formData.append ('image',image)
               const result = proceduresForMaster.map(procedure_id => ({ procedure_id}));
               formData.append('Master_to_Procedure',JSON.stringify(result))
-              const res = await axios.post('http://localhost:5000/api/procedures',
-                  formData,
-                  {headers:{ ...authHeader(), 'Content-Type': 'multipart/form-data'}})
 
-              (res.status===200)
+              const res = await axios.post('http://localhost:5000/api/masters/add',
+                  formData,
+                  {headers:{ ...authHeader(), 'Content-Type': 'multipart/form-data'}});
+
+
+
+             if  (res.status===200)
               {
 
                   onAdd(res);

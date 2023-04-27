@@ -3,9 +3,12 @@ import {Select,Input} from "@material-ui/core";
 import {MenuItem} from "@mui/material";
 import {DatePicker} from "@mui/x-date-pickers";
 import {sendRequestOnProcedure} from '../actions/schedule'
+import { addDays } from 'date-fns';
 const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => {
     const [time, setTime] = useState('10:00')
     const [date, setDate] = useState(new Date())
+    const minDate = addDays(new Date(), 1);
+
 
     const [availableMasters, setAvailableMasters] = useState(masters)
     const [availableMaster, setAvailableMaster] = useState(masters[0])
@@ -124,6 +127,7 @@ const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => 
             <DatePicker
                 value={date}
                 onChange={handleDateChange}
+                minDate={minDate}
                 label="Выберите дату"/>
 
 
