@@ -40,7 +40,7 @@ const Login = () => {
                     <button className={styles.registerButton}
                             type="submit">Sign In
                     </button>
-                    <a href='/'>Sign Up </a>
+                   <div className={styles.signup}> <a href='/'>Sign Up </a></div>
                 </div>
             </form>
         </div>

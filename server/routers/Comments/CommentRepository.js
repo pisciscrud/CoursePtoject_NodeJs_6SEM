@@ -59,7 +59,6 @@ class   CommentRepository {
         try
         {
 
-            console.log('AAAAA',rating);
 
 
 

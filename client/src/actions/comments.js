@@ -17,7 +17,7 @@ export const getComments = async ()=>
     }
 }
 
-export   const fetchNotifications =async() =>{
+export const fetchNotifications =async() =>{
     try {
         const response = await axios.get('http://localhost:5000/api/notifications',{headers: authHeader()});
 

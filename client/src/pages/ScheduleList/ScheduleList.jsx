@@ -19,7 +19,10 @@ const ScheduleList = () => {
     {
         axios.get('http://localhost:5000/api/schedule/update-records')
             .then(response => {
-              //  console.log(`Updated ${response.data} records!`);
+
+               // setNotes(response.data)
+
+              console.log(`Updated ${response.data} records!`);
             })
             .catch(error => {
                // console.error('Failed to update records:', error);

@@ -121,7 +121,20 @@ class ScheduleRepository
            },
            data :{
                status_id: status_id
-           }
+           },
+           include:
+               {
+                   Procedure_table:true,
+                   User_table:
+                       {
+                           select :
+                               {
+                                   full_name:true,
+                               }
+                       },
+                   Master:true,
+                   Pet:true
+               }
        })
 
 
@@ -138,7 +151,7 @@ class ScheduleRepository
                              date_  : new Date(),
                              accepted : false,
                              user_id:updateRecord.owner_id,
-
+                             content:`Admin change status of your record on ${updateRecord.Procedure_table.name_procedure} for your pet ${updateRecord.Pet.nickname}`
 
                          }
                  }
@@ -201,10 +214,13 @@ class ScheduleRepository
              where: { date_: { lte: new Date() } },
          });
 
+        
+
          const updatedRecords = await this.prismaClient.Schedule.updateMany({
              where: { id: { in: recordsToUpdate.map(record => record.id) } },
              data: { status_id: 4 },
          });
+         
      }
      catch(e)
      {

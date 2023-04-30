@@ -23,7 +23,7 @@ class ScheduleService
     }
     async updateStatusRecord()
     {
-
+       //  console.log('frefre')
       return  await this.scheduleRepository.updateRecords();
     }
 

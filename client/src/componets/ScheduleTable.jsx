@@ -6,6 +6,7 @@ import {fetchMasters} from "../actions/master";
 import {getScheduleOfDay} from '../actions/admin'
 import CardSchedule from './CardSchedule'
 
+import styles from './main.module.css'
 
 const ScheduleTable = () => {
     const {refetch: refetchMasters,data:masters}=useQuery("masters",()=>fetchMasters())
@@ -29,7 +30,7 @@ const ScheduleTable = () => {
                 <TableRow>
                     <TableCell></TableCell>
                     {masters && masters.map((master) => (
-                        <TableCell key={master.id}>{master.name_master} {master.surname_master}</TableCell>
+                        <TableCell  className={styles.MasterName} key={master.id}>{master.name_master} {master.surname_master}</TableCell>
 
                     ))}
                 </TableRow>
@@ -42,7 +43,7 @@ const ScheduleTable = () => {
                             const appointment = schedule.find((item) => item.time === time.start && item.master_id === master.id);
                             return (
                                 <TableCell key={`${master.id}_${rowIndex}`}>
-                                    {appointment ? <CardSchedule appointment={appointment}/> : 'Свободен'}
+                                    {appointment ? <CardSchedule appointment={appointment}/> : <div className={styles.cardScheduleFree} >Free</div>}
                                 </TableCell>
                             );
                         })}

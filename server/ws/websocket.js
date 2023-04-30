@@ -1,12 +1,10 @@
-const io = require("socket.io");
+
 const {Server} = require("socket.io");
 const jwt = require('jsonwebtoken');
 
 let _io = null;
 
-
-
-
+ const allSockets = []
 
 
 function initWS(http) {
@@ -19,7 +17,25 @@ function initWS(http) {
 
 
 
+    
+
     io.on('connection', (socket) => {
+
+      
+     socket.on('subscribe', data => {
+        const userId = data.userId;
+
+        const existingUserIdIndex = allSockets.findIndex(item => item.userId = userId);
+        if(existingUserIdIndex === -1) {
+            allSockets.push({ userId, socket })
+        }
+        else {
+            allSockets[existingUserIdIndex].socket = socket;
+        }
+        
+    })
+
+
       //  console.log(`⚡: ${socket.id} user just connected!`);
         if (socket.handshake.query.channel === 'new-notification') {
             console.log(`⚡: ${socket.id} user just connected!`);
@@ -33,9 +49,10 @@ function initWS(http) {
 
         }
     })
-    io.on("disconnect", () => {
-                console.log("🔥: A user disconnected");
-           });
+
+    // io.on("disconnect", () => {
+    //             console.log("🔥: A user disconnected");
+    //        });
 
     // io.on("new-notification", (socket) => {
     //     console.log(`⚡: ${socket.id} user just connected!`);
@@ -89,4 +106,4 @@ async function emitNotification(io, userId, notification)
 }
 
 
-module.exports = { initWS, getWS,emitNotification }
+module.exports = { initWS, getWS,emitNotification, allSockets }

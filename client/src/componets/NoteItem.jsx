@@ -13,6 +13,7 @@ import MuiDialogActions from '@material-ui/core/DialogActions';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
+import CommentIcon from '@mui/icons-material/Comment';
 import {withStyles} from "@material-ui/core/styles";
 import ProcedureRegistrationForm from "./ProcedureRegistrationForm";
 // Before the component definition:
@@ -53,7 +54,9 @@ const NoteItem = ({note}) => {
         setOpen(false);
     };
     function  getTime(time) {
-        const time1 = time.getFullYear()  +'-'+ time.getUTCMonth() + '-' + time.getUTCDate()
+        const month = time.getMonth() + 1;
+        const time1 = time.getFullYear()  +'-'+  month + '-' + time.getUTCDate()
+     
         return time1;
     }
 
@@ -69,7 +72,7 @@ const NoteItem = ({note}) => {
                 <span>Pet: {note.Pet.nickname}</span>
             </div>
             <p>
-                <span>Status: </span>
+                
                 {
                     note.Status.status_name==='In progress' && <span className={styles.waiting}>{note.Status.status_name}</span>
                 }
@@ -84,11 +87,14 @@ const NoteItem = ({note}) => {
             </p>
             {
                 note.Status.status_name==='Сompleted' &&
+              <div >
+                <CommentIcon/>
                 <Button  style={{
                     margin:"10px"
                 }} variant="outlined" size="small" color="primary"  onClick={handleClickOpen}>
-               Get review
+               Send comment
                 </Button>
+                </div>
             }
 
             <div className={styles.noteCardFooter}>
@@ -98,7 +104,7 @@ const NoteItem = ({note}) => {
             </div>
 
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
-                <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                <DialogTitle>
                   Send comment
                 </DialogTitle>
                 <DialogContent >
@@ -108,8 +114,7 @@ const NoteItem = ({note}) => {
                         Procedure: {note.Procedure_table.name_procedure}
                         </p>
                         <p>
-                         Master:   {note.Master.name_master}
-                        {note.Master.surname_master}
+                         Master:   {note.Master.name_master}   {note.Master.surname_master}
                         </p>
                     </Typography>
                     <CommentForm

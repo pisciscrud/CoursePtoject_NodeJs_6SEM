@@ -24,7 +24,7 @@ import {deletePet, getPetTypes} from "../actions/pet"
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        marginTop: theme.spacing(2),
+        marginTop: theme.spacing(5),
         marginLeft: 100,
 
 

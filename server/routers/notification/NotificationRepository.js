@@ -30,6 +30,31 @@ class NotificationRepository {
 
     }
 
+    async updateStatus(id)
+    {
+        try 
+        {
+
+            console.log(id)
+            const notifications = await this.prismaClient.Notification.update(
+                {
+                  where:  {
+                     id
+                  },
+                  data :
+                  {
+                    accepted: true
+                  }
+                }
+            );
+
+        }
+        catch (e)
+        {
+            throw createError(500,"Db Error"+e.message);
+        }
+    }
+
 
 }
 module.exports=NotificationRepository;

@@ -12,6 +12,20 @@ const notificationRouter = express.Router();
 
 const notificationService =  new NotificationService();
 
+notificationRouter.put('/accept',roleMiddleware(["user"]), async(req,res,next)=>{
+    try {
+
+        const {notificationId}=req.body
+        console.log('id',req.body)
+        const notifications = await notificationService.updateNotification(notificationId);
+        res.json(notifications)
+    }
+    catch (e)
+    {
+        next(e);
+    }
+})
+
 notificationRouter.get('/',roleMiddleware(["user"]), async(req,res,next)=>{
     try {
         const idUser = req.userId
@@ -23,5 +37,7 @@ notificationRouter.get('/',roleMiddleware(["user"]), async(req,res,next)=>{
         next(e);
     }
 })
+
+
 
 module.exports = notificationRouter

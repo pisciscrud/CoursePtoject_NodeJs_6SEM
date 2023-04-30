@@ -2,9 +2,11 @@
     background-image: url('grooming.png');
     background-color: #D59DF5;
     background-size: cover;
-    background-position: center;
+    background-position: center; 
     display: flex;
-    overflow-y: auto;
-    min-height: 400px;
-    flex-grow: 1;
+     overflow-y: auto;
+    max-width: 100%;
+    height: auto;
+    /* display: block;
+    flex-grow: 1; */
 }

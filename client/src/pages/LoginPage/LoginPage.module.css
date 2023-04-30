@@ -32,7 +32,7 @@
 
     border: 3px solid #7922CC;
     border-radius: 25px;
-    padding: 15px;
+    padding: 30px;
     background-color: #F8F1FF;
     display: flex;
     flex-direction: column;
@@ -47,16 +47,22 @@
 }
 
 .inputGroup label {
-    color: white;
+    /*color: white;*/
     font-weight: lighter;
 }
 
 .inputGroup input {
     font-size: 1.25rem;
     padding: .5em;
-    border: 2px solid #7922CC;
+    margin-bottom: 10px;
+    border-bottom: 2px solid #7922CC;
     outline: none;
     border-radius: .25em;
+    border-top: none;
+    border-left: none;
+    border-right: none;
+    background-color: #F8F1FF;
+
 
     font-weight: lighter;
 }
@@ -93,7 +99,7 @@
 
 .registerButton {
     font-size: 1.25rem;
-    border: 1px solid #7922CC;
+    border: 2px solid #7922CC;
     padding: .5em 1em;
     font-weight: lighter;
     color:#7922CC;
@@ -111,5 +117,68 @@
 
 .registerButton:hover,
 .registerButton:focus {
+    background-color: #7922CC;
+    color: #F8F1FF;
 
 }
+
+.signup {
+    text-align: center;
+}
+.signup a {
+    text-decoration: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

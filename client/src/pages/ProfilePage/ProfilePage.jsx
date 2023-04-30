@@ -21,7 +21,7 @@ const ProfilePage = () => {
         <Outlet/>
             {/*<PetsList></PetsList>*/}
 
-            <div className={styles.logout}><button className={styles.logoutBotton} onClick={handleLogout}>Logout</button></div>
+            {/* <div className={styles.logout}><button className={styles.logoutBotton} onClick={handleLogout}>Logout</button></div> */}
 
         </div>
     );

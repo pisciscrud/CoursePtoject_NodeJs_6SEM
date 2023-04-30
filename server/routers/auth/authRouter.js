@@ -32,8 +32,6 @@ authRouter.post('/register', [
 
 authRouter.post('/login', async (req, res, next) => {
         try {
-
-
             const {password, login} = req.body;
 
             const token = await authService.login(login, password);
@@ -45,6 +43,20 @@ authRouter.post('/login', async (req, res, next) => {
         }
     }
 )
+
+authRouter.post('/refresh', async(req, res, next) => {
+    try {
+        const refreshToken = req.body.refreshToken;
+
+        if(!refreshToken) throw new Error('Refresh token in not provided');
+
+        const { accessToken , refreshToken: newRefreshToken } = await authService.refreshToken(refreshToken)
+
+    }
+    catch(err) {
+
+    }
+})
 
 authRouter.get("/admin", async (req, res, next) => {
     try {
@@ -59,9 +71,7 @@ authRouter.get("/admin", async (req, res, next) => {
     }
 });
 
-authRouter.get('/users', roleMiddleware(["user"]), async (req, res) => {
-    res.json('eferf');
-})
+
 
 
 module.exports = authRouter;

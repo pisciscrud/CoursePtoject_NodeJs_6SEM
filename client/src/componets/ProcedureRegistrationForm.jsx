@@ -94,10 +94,9 @@ const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => 
     }
 
     return (
-        <form onSubmit={handleSubmit}>
+        <form onSubmit={handleSubmit} >
             {pets && pets.length>0  ?
             <Select
-
                 value={availablePet.id}
                 onChange={handlePetChange}>
 

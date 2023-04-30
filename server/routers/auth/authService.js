@@ -2,34 +2,31 @@ const AuthRepository = require("./authRepository");
 const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const createError = require("http-errors");
+const redis = require("redis")
 
 class AuthService {
+    
 
     constructor() {
         this.authRepository = new AuthRepository();
+        this.redisClient = new redis.createClient()
     }
 
     async login(login, password) {
-
         const user = await this.authRepository.findUserByLogin(login);
-
 
         if (!user) {
             throw createError(400, "User with this username does not exist")
         }
 
-
         if (!(await bcrypt.compare(password, user.password))) {
             throw createError(400, "Password is incorrect");
         }
 
-
-        return jwt.sign({id: user.id, roleId: user.id_role}, process.env.SECRET_KEY, {expiresIn: '1h'});
-
+        return jwt.sign({id: user.id, roleId: user.id_role}, process.env.SECRET_KEY, { expiresIn: '1h' });
     }
 
     async register(FullName, email, login, password) {
-
         const user = await this.authRepository.findUserByLogin(login);
 
         if (user) {
@@ -53,6 +50,18 @@ class AuthService {
         //console.log('ROLE' + role.Role_name);
         const admin = (role.Role_name === "admin") ? true : false;
         return admin;
+
+    }
+
+    async refreshToken(oldRefreshToken) {
+        const isExists = !!(await this.redisClient.get(oldRefreshToken));
+
+        if(!isExists) throw new Error('Refresh token is not valid');
+
+        const { userId } = jwt.verify(oldRefreshToken, 'REFRESH_TOKEN_SECRET');
+
+        // TODO: достать юзера, опрокинуть его инфу в новый рефреш токен, и вернуть эту залупу
+        const newAccessToken = jwt.sign({id: user.id, roleId: user.id_role}, process.env.SECRET_KEY, { expiresIn: '1h' });
 
     }
 }

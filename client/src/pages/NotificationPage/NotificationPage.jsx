@@ -4,8 +4,10 @@ import jwtDecode from 'jwt-decode';
 import {fetchNotifications} from '../../actions/comments'
 import NotificationItem  from "../../componets/NotificationItem";
 import {Grid} from "@material-ui/core";
+import axios from 'axios'
+import {authHeader }from '../../actions/procedure'
 //const jwt = require('jsonwebtoken');
-const getIdFromToken = async()=>{
+const getIdFromToken = ()=>{
     const token = localStorage.getItem('token').trim();
     const {id} = jwtDecode(token);
     return id;
@@ -19,15 +21,18 @@ const NotificationPage = () => {
 
     useEffect(()=>{
 
-        // async function fetchNotifications() {
-        //     try {
-        //         const response = await axios.get('http://localhost:5000/api/notifications');
-        //         console.log(response.data)
-        //         setNotifications(response.data);
-        //     } catch (error) {
-        //         console.error(error);
-        //     }
-        // }
+        if(getIdFromToken()) {
+            console.log(getIdFromToken())
+            socket.emit('subscribe', { userId: getIdFromToken() })
+            socket.on('admin-notification', (data) => {
+                
+                setNotifications((notifications)=>[...notifications,data.notification])
+            })
+        }
+
+
+        
+   
         fetchNotifications().then((res)=>{
             console.log(res);
             setNotifications(res)});
@@ -44,25 +49,16 @@ const NotificationPage = () => {
     },[])
 
 
-    function handleClick(notification) {
-        if (!notification.accepted) {
+    const updateNotificationStatus = async (notificationId) => {
 
-            const updatedNotifications = notifications.map((n) => {
-                if (n.id === notification.id) {
-                    return { ...n, accepted: true };
-                } else {
-                    return n;
-                }
-            });
-            setNotifications(updatedNotifications);
-        }
-    }
+      return await  axios.put(`/api/notifications/accept`,{notificationId},{headers: authHeader()});
+      };
     return (
         <div>
 
         {notifications &&  notifications.map((notification) => (
-                       //console.log(notification)
-                <NotificationItem key={notification.id} notification={notification}  />
+        
+                <NotificationItem key={notification.id}   updateNotificationStatus={updateNotificationStatus} notification={notification}  />
 
         ))}
 

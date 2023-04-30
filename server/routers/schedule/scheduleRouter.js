@@ -7,7 +7,7 @@ const ScheduleService = require("../schedule/ScheduleService");
 const scheduleRouter = express.Router();
 
 const scheduleService = new ScheduleService();
-const {getWS,emitNotification} = require("../../ws/websocket");
+const {getWS,emitNotification, allSockets} = require("../../ws/websocket");
 
 scheduleRouter.get(
     '/recordsOfUser',
@@ -62,6 +62,9 @@ scheduleRouter.get('/current-day',roleMiddleware (["admin"]), async  (req,res,ne
 
 scheduleRouter.get('/update-records',async(req,res,next)=>
 {
+
+
+  //  console.log('dfds')
     return await scheduleService.updateStatusRecord();
 
 })
@@ -120,7 +123,12 @@ scheduleRouter.post('/confirm',roleMiddleware(["admin"]),async (req,res,next)=>
    console.log(createdNotification);
         if (createdNotification) {
            // await emitNotification(ws, createdNotification.user_id, createdNotification)
-            ws.emit('new-notification',{userId: createdNotification.user_id, notification: createdNotification})
+          //  ws.emit('new-notification',{userId: createdNotification.user_id, notification: createdNotification})
+        const socket = allSockets.find(item => item.userId = createdNotification.user_id).socket;
+
+        if(socket) {
+            socket.emit('admin-notification', { notification: createdNotification })
+        }
         }
          return res.json(updateRecord);
 

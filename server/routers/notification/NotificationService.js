@@ -22,6 +22,18 @@ class NotificationService
         }
 
     }
+
+    async updateNotification(id)
+    {
+        try 
+        {
+            return this.notificationRepository.updateStatus(id)
+        }
+        catch (e)
+        {
+
+        }
+    }
 }
 
 module.exports=NotificationService;
