@@ -10,7 +10,7 @@ export const authHeader = () => {
 
 export const getProceduresAll = async ()  => {
     try {
-        const response = await axios.get('http://localhost:5000/api/procedures');
+        const response = await axios.get('https://localhost:5000/api/procedures');
         return response.data
     } catch (error) {
         console.log(error);
@@ -23,7 +23,7 @@ export const getProceduresAll = async ()  => {
         try
         {
             console.log(id)
-            const response = await axios.get(`http://localhost:5000/api/procedures/petsOfUser/${id}`,{headers: authHeader()})
+            const response = await axios.get(`https://localhost:5000/api/procedures/petsOfUser/${id}`,{headers: authHeader()})
             console.log('pets',response.data)
             return response.data
         }
@@ -39,7 +39,7 @@ export const getProceduresAll = async ()  => {
         try
         {
             console.log('id',id)
-            const response = await axios.get(`http://localhost:5000/api/procedures/mastersAndProcedures/${id}`)
+            const response = await axios.get(`https://localhost:5000/api/procedures/mastersAndProcedures/${id}`)
             return response.data
         }
         catch (e)
@@ -55,7 +55,7 @@ export const getProceduresAll = async ()  => {
         try
         {
 
-            const res =await axios.delete(`http://localhost:5000/api/procedures/${id}`,{headers: authHeader()})
+            const res =await axios.delete(`https://localhost:5000/api/procedures/${id}`,{headers: authHeader()})
             return res;
         }
         catch (e)
@@ -63,6 +63,21 @@ export const getProceduresAll = async ()  => {
             console.log(e);
         }
 
+    }
+
+    export const getProceduresByType = async (id) =>
+    {
+        try
+        {
+            const res =await axios.get(`https://localhost:5000/api/procedures/byType/${id}`,{headers: authHeader()})
+            console.log(res)
+            return res;
+
+        }
+        catch (e)
+        {
+            console.log(e);
+        }
     }
 
 

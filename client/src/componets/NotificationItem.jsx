@@ -4,6 +4,9 @@ import formatDistance from "date-fns/formatDistance";
 import styles from './main.module.css';
 import DoneAllIcon from '@mui/icons-material/DoneAll';
 import { FormControl, FormControlLabel, Checkbox, Tooltip } from '@material-ui/core';
+import ClearIcon from '@mui/icons-material/Clear';
+import Button from '@material-ui/core/Button';
+import  {onDeleteNotification} from '../actions/comments'
 
 
 function formatDate(dateStr) {
@@ -18,6 +21,15 @@ const NotificationItem = ({notification, updateNotificationStatus}) => {
         updateNotificationStatus(notification.id);
         setAccepted(newStatus);
     };
+
+    const handleDelete = async (e)=>
+    {
+        e.preventDefault();
+        const res = await onDeleteNotification(notification.id);
+        return res;
+
+    }
+
     return (
     
         <>
@@ -25,7 +37,7 @@ const NotificationItem = ({notification, updateNotificationStatus}) => {
             
             <div className={styles.notAcceptedNotification} style={{ display: 'flex', alignItems: 'center' }}>
             <div>
-              <p style={{ marginRight: 5, fontSize: '16px' }}>New!  </p>
+              <p style={{ marginRight: 5, fontSize: '16px' }}>New! </p>
             </div>
             <div >
               <p style={{ margin: 0, fontSize: '14px' }}>{notification.content}</p>
@@ -42,17 +54,18 @@ const NotificationItem = ({notification, updateNotificationStatus}) => {
             }
             {
                 accepted  &&
-                <div>
+
 
             <div className={styles.acceptedNotification} >
            
-                <p style={{ margin: 0, fontSize: '16px' }}>Admin change status of record for  procedure</p>
-                <p style={{ marginRight:15, fontSize: '12px', color: '#9B9B9B' }}>{formatDate(notification.date_)}
-                <DoneAllIcon  style={{ marginLeft:300}}/>
+                <p style={{ margin: 0, fontSize: '12px' }}>{notification.content}</p>
+                <div style={{ display:'flex', flexDirection:'row', marginLeft:230}}>
+                <p style={{ fontSize: '12px', color: '#9B9B9B'}}>{formatDate(notification.date_)}
+                    <button onClick={handleDelete} style={{ border: 'none'}}> <ClearIcon style={{fontSize:'medium' ,color: '#9B9B9B'}}/></button>
                 </p>
-
+               </div>
             </div>
-        </div>
+
             }
         </>
     );

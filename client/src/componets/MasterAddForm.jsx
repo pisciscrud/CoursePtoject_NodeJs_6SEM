@@ -11,7 +11,7 @@ const MasterAddForm = ({procedures,onAdd}) => {
    const [proceduresForMaster,setProceduresForMaster]=useState([])
    const [surnameMaster,setSurnameMaster]=useState('');
 
-
+    const [error1, setError1] = useState(null);
 
     const handleProcedureChange =(e)=>
     {
@@ -28,38 +28,6 @@ const MasterAddForm = ({procedures,onAdd}) => {
 
 
     const handleImageChange = (event) => {
-        // const file = event.target.files[0];
-        // if (file && file.type.includes('image/')) {
-        //     setError(null);
-        //     // изменяем размер и качество изображения
-        //     ImageResizer.imageFileResizer(
-        //         file,
-        //         200, // новая ширина
-        //         200, // новая высота
-        //         'JPEG', // формат
-        //         80, // качество
-        //         0, // поворот (0 - не поворачивать)
-        //         (uri) => {
-        //             // после изменения сохраняем сжатое изображение
-        //             const byteString = atob(uri.split(',')[1]);
-        //             const mimeString = uri.split(',')[0].split(':')[1].split(';')[0];
-        //             const ab = new ArrayBuffer(byteString.length);
-        //             const ia = new Uint8Array(ab);
-        //             for (let i = 0; i < byteString.length; i++) {
-        //                 ia[i] = byteString.charCodeAt(i);
-        //             }
-        //             const blob = new Blob([ab], { type: mimeString });
-        //             setImage(blob);
-        //             setImagePreview(URL.createObjectURL(blob));
-        //         },
-        //         'base64' // выходной формат (base64 или blob)
-        //     );
-        // } else {
-        //     setError('Please choose an image file');
-        //     setImage(null);
-        //     setImagePreview(null);
-        // }
-
         const file = event.target.files[0];
         if (file && file.type.includes('image/')) {
             setError(null);
@@ -68,8 +36,6 @@ const MasterAddForm = ({procedures,onAdd}) => {
             setError('Please choose an image file');
             setImage(null);
         }
-
-
     };
 
 
@@ -80,32 +46,25 @@ const MasterAddForm = ({procedures,onAdd}) => {
           e.preventDefault()
           try
           {
-              console.log(nameMaster,surnameMaster,description,image,proceduresForMaster)
-
-              const formData=new FormData();
-              formData.append('name_master',nameMaster);
-              formData.append('surname_master',surnameMaster)
-              formData.append('description',description);
-              formData.append ('image',image)
-              const result = proceduresForMaster.map(procedure_id => ({ procedure_id}));
-              formData.append('Master_to_Procedure',JSON.stringify(result))
-
-              const res = await axios.post('http://localhost:5000/api/masters/add',
-                  formData,
-                  {headers:{ ...authHeader(), 'Content-Type': 'multipart/form-data'}});
-
-
-
-             if  (res.status===200)
-              {
-
-                  onAdd(res);
-                //  history('/admin/masters');
-
+              if (!image || !nameMaster || !surnameMaster || !description || proceduresForMaster.length === 0) {
+                  setError('Please fill out all fields');
+                  return;
               }
-
-            //  return master;
-          //    alert ('cedce')
+              else {
+                  const formData = new FormData();
+                  formData.append('name_master', nameMaster);
+                  formData.append('surname_master', surnameMaster)
+                  formData.append('description', description);
+                  formData.append('image', image)
+                  const result = proceduresForMaster.map(procedure_id => ({procedure_id}));
+                  formData.append('Master_to_Procedure', JSON.stringify(result))
+                  const res = await axios.post('https://localhost:5000/api/masters/add',
+                      formData,
+                      {headers: {...authHeader(), 'Content-Type': 'multipart/form-data'}});
+                  if (res.status === 200) {
+                      onAdd(res);
+                  }
+              }
           }
           catch (e)
           {
@@ -136,7 +95,6 @@ const MasterAddForm = ({procedures,onAdd}) => {
                 {
                    procedures && procedures.length>0 ?
                        procedures.map(( procedure)=>
-                            //    console.log('aa'))
                             <div >
                                 <label>
                                     <input type="checkbox"
@@ -148,6 +106,7 @@ const MasterAddForm = ({procedures,onAdd}) => {
                             </div> )
                         : <h1>aaaa</h1>
                 }
+                {error1 && <div style={{ color: 'red' }}>{error1}</div>}
 
 
                 <button type="submit">Submit</button>

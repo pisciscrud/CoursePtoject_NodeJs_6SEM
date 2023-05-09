@@ -13,11 +13,14 @@ import MasterList from "../../componets/MasterList";
 const MasterPage = () => {
 
     return (
-        <div className={styles.container}>
 
-            {/*<Header></Header>*/}
+
+<div className={styles.full}>
+        <div className={styles.container}>
             <MasterList></MasterList>
         </div>
+</div>
+
     );
 };
 

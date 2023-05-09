@@ -16,8 +16,13 @@ import Typography from '@material-ui/core/Typography';
 import CommentIcon from '@mui/icons-material/Comment';
 import {withStyles} from "@material-ui/core/styles";
 import ProcedureRegistrationForm from "./ProcedureRegistrationForm";
-// Before the component definition:
-const socket = io.connect("http://localhost:5000");
+import ClearIcon from "@mui/icons-material/Clear";
+import {onDeleteNotification} from "../actions/comments";
+import {deleteRecord} from '../actions/schedule'
+
+
+
+
 const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
     return (
@@ -42,7 +47,7 @@ const DialogContent = withStyles((theme) => ({
 
 
 
-const NoteItem = ({note}) => {
+const NoteItem = ({note,onDeleteNote}) => {
 
 
     const [open, setOpen] = React.useState(false);
@@ -53,6 +58,14 @@ const NoteItem = ({note}) => {
     const handleClose = () => {
         setOpen(false);
     };
+    const handleDelete = async ()=>
+    {
+
+
+        const res = await onDeleteNote(note);
+        return res;
+
+    }
     function  getTime(time) {
         const month = time.getMonth() + 1;
         const time1 = time.getFullYear()  +'-'+  month + '-' + time.getUTCDate()
@@ -77,10 +90,16 @@ const NoteItem = ({note}) => {
                     note.Status.status_name==='In progress' && <span className={styles.waiting}>{note.Status.status_name}</span>
                 }
                 {
-                    note.Status.status_name==='Denied' && <span className={styles.denied}>{note.Status.status_name}</span>
+                    note.Status.status_name==='Rejected' && <span className={styles.denied}>{note.Status.status_name}</span>
                 }
                 {
-                    note.Status.status_name==='Approved' && <span className={styles.approved}>{note.Status.status_name}</span>
+                    note.Status.status_name==='Approved' &&
+
+                    <div>
+
+                    <span className={styles.approved}>{note.Status.status_name}</span>
+                        <button onClick={handleDelete} style={{ border: 'none'}}> <ClearIcon style={{fontSize:'medium' ,color: '#9B9B9B'}}/></button>
+                    </div>
                 }
 
 

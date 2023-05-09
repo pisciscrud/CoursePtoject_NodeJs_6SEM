@@ -23,7 +23,7 @@ class ScheduleService
     }
     async updateStatusRecord()
     {
-       //  console.log('frefre')
+
       return  await this.scheduleRepository.updateRecords();
     }
 
@@ -35,28 +35,45 @@ class ScheduleService
         try
         {
             const now = new Date();
-            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000; // разница в миллисекундах между UTC и локальным временем
+            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000;
             const today = new Date(now.getTime() - (now.getTime() + timezoneOffset) % (24 * 60 * 60 * 1000));
             const t = today.setUTCHours(0);
-            console.log('today',t)
             const res = await this.scheduleRepository.getAllRecordsOfDate(today);
             return res;
         }
         catch(e)
         {
 
+            console.log('Error:', e.message);
         }
     }
 
-    async  getRecordsOfUser(idUser)
+    async  getRecordsOfUser(idUser,id)
     {
         try
         {
-            return  await this.scheduleRepository.getRecordsOfUser(idUser)
+            return  await this.scheduleRepository.getRecordsOfUser(idUser,id)
 
         }
         catch (e)
-        {}
+        {
+            console.log('Error:', e.message);
+        }
+
+    }
+
+
+    async deleteUserRecord(id)
+    {
+        try
+        {
+            return  await this.scheduleRepository.deleteRecord(id)
+
+        }
+        catch (e)
+        {
+            console.log('Error:', e.message);
+        }
 
     }
 
@@ -67,7 +84,9 @@ class ScheduleService
             return  await this.scheduleRepository.getRecords()
         }
         catch (e)
-        {}
+        {
+            console.log('Error:', e.message);
+        }
 
     }
 
@@ -79,7 +98,7 @@ class ScheduleService
         }
         catch (e)
         {
-
+            console.log('Error:', e.message);
         }
 
     }
@@ -92,7 +111,9 @@ class ScheduleService
             return  await this.scheduleRepository.getRecordsForProcedures(id);
         }
         catch (e)
-        {}
+        {
+            console.log('Error:', e.message);
+        }
     }
 
 
@@ -108,7 +129,110 @@ class ScheduleService
             console.log('Error occurred while confirming record with ID:', record_id, 'Error:', error.message);
            // throw createError(500, "Database error occurred while confirming record!");
         }
+    }
+
+
+    async nearestForUser(id)
+    {
+        try
+        {
+            const record =await this.scheduleRepository.findNearest(id);
+            return record;
         }
+        catch (e)
+        {
+
+            console.log('Error occurred while confirming record with ID:', 'Error:', e.message);
+            // throw createError(500, "Database error occurred while confirming record!");
+        }
+    }
+
+
+    async procedureForPets(id)
+    {
+        try
+        {
+
+            return await this.scheduleRepository.countProceduresForUserPets(id);
+
+        }
+        catch (e)
+        {
+
+            console.log('Error occurred while confirming record with ID:', 'Error:', e.message);
+            // throw createError(500, "Database error occurred while confirming record!");
+        }
+    }
+
+
+    async getProcedures()
+    {
+        try
+        {
+            return await this.scheduleRepository.getCountProceduresFromSchedule();
+        }
+        catch (e)
+        {
+
+            console.log('Error occurred while confirming record with ID:', 'Error:', e.message);
+            // throw createError(500, "Database error occurred while confirming record!");
+        }
+
+
+    }
+
+    async getStatisticAboutMaster()
+    {
+        try
+        {
+            return await this.scheduleRepository.getCountProceduresByMaster();
+        }
+        catch (e)
+        {
+
+            console.log('Error occurred while confirming record with ID:', 'Error:', e.message);
+            // throw createError(500, "Database error occurred while confirming record!");
+        }
+    }
+
+
+    async getStatusStatistic()
+    {
+        try
+        {
+            return await this.scheduleRepository.getByStatusAllRecords()
+        }
+        catch (e)
+        {
+
+            console.log('Error occurred while confirming record with ID:', 'Error:', e.message);
+            // throw createError(500, "Database error occurred while confirming record!");
+        }
+
+    }
+
+
+    async getRatingStatistic()
+    {
+        try
+        {
+            return await this.scheduleRepository.ratingStatisticForAdmin()
+        }
+        catch (e)
+        {
+
+            console.log('Error occurred while confirming record with ID:', 'Error:', e.message);
+            // throw createError(500, "Database error occurred while confirming record!");
+        }
+
+
+
+    }
+
+
+
+
+
 
 
 

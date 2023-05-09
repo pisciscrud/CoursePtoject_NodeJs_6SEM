@@ -19,12 +19,16 @@ import RatingFromBd from "./RatingFromBd";
 
 const useStyles = makeStyles({
     root: {
-        width: 200,
+        width: 270,
         margin:30,
+        borderRadius: 20,
+        padding: 15,
+        background:"white"
 
     },
     media: {
-        height: 140,
+        height: 200,
+        borderRadius: 20,
 
     },
 });
@@ -70,17 +74,7 @@ const DialogContent = withStyles((theme) => ({
 const MasterItem = ({master,isAdm,onDeleteMaster}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-  //  const [ratMaster,setRatMaster]=useState([]);
     const {refetch:refetchRatMaster,data:ratMaster}=useQuery('refetchRatingMaster',()=>ratingMaster(master.id));
-    // useEffect(() => {
-    //
-    //
-    //     refetchRatMaster()
-    //         .then((data)=>{
-    //             setRatMaster(data.data)})
-    // }, [ratMaster]);
-
-
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -96,18 +90,15 @@ const MasterItem = ({master,isAdm,onDeleteMaster}) => {
 
     return (
 
-
-<div>
+         <div>
             <Card className={classes.root}>
                 <CardActionArea>
                 <CardMedia
                     className={classes.media}
-                    image={`http://localhost:5000/${master.photo_master}`}
-                    title="Contemplative Reptile"
-                />
+                    image={`https://localhost:5000/${master.photo_master}`}
+                    title="Contemplative Reptile"/>
                 <CardContent>
-                    <h2>{master.name_master}</h2>
-                    <p>{master.surname_master}</p>
+                    <h4>{master.name_master} {master.surname_master}</h4>
                 </CardContent>
                     <Button  style={{
                         margin:"10px"
@@ -129,7 +120,7 @@ const MasterItem = ({master,isAdm,onDeleteMaster}) => {
            Master
         </DialogTitle>
         <DialogContent dividers>
-            <CardMedia  style={{width:"450px",height:"200px"}} className={classes.media}   image={`http://localhost:5000/${master.photo_master}`}></CardMedia>
+            <CardMedia  style={{width:"450px",height:"200px"}} className={classes.media}   image={`https://localhost:5000/${master.photo_master}`}></CardMedia>
             <Typography gutterBottom>
               <p>{master.name_master} {master.surname_master}</p>
             </Typography>

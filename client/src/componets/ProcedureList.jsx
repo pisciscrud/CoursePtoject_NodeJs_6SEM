@@ -2,12 +2,13 @@ import React, { useState, useEffect } from 'react';
 
 import ProcedureItem from './ProcedureItem';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
-import {Button, Grid} from '@material-ui/core';
+import {Button, Grid, Select} from '@material-ui/core';
 import { useQuery } from 'react-query';
   import {getProceduresAll} from '../actions/procedure'
 import {getSchedule} from "../actions/schedule";
 import {isAdmin} from "../actions/user";
 import styles from "./main.module.css";
+import Pagination from '../componets/Pagination';
 
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -20,13 +21,18 @@ import DialogActions from "@material-ui/core/DialogActions";
 import {deletePet, getPetTypes} from "../actions/pet";
 
 import {deleteProcedure} from "../actions/procedure";
+import FilterPanel from "./FilterPanel";
+import {MenuItem} from "@mui/material";
+import {getProceduresByType} from '../actions/procedure'
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
         flexGrow: 1,
-        width: 600,
-
+        marginBottom: theme.spacing(2),
     },
+
+
 }));
 const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
@@ -52,6 +58,15 @@ const DialogContent = withStyles((theme) => ({
 
 const ProcedureList = () => {
     const [open, setOpen] = React.useState(false);
+    const [currentPage, setCurrentPage] = useState(1);
+    const [objectsPerPage, setObjectsPerPage] = useState(4);
+
+    const indexOfLastObject = currentPage * objectsPerPage;
+    const indexOfFirstObject = indexOfLastObject - objectsPerPage;
+
+    const handlePageChange = (pageNumber) => {
+        setCurrentPage(pageNumber);
+    };
     const handleClickOpen = () => {
         setOpen(true);
     };
@@ -86,6 +101,7 @@ const ProcedureList = () => {
         //const {refetch:refetchPets,data:pets}=useQuery("pets",()=>getPetsOfUser())
     const {data:isAdm} = useQuery("isAdm",()=>isAdmin())
     const {refetch:refetchPetTypes,data:petTypes}=useQuery("petTypes",()=>getPetTypes())
+    const currentProcedures = procedures.slice(indexOfFirstObject, indexOfLastObject);
 
 
     const handleAddProcedure = async() =>
@@ -95,38 +111,79 @@ const ProcedureList = () => {
                 setProcedures(data.data)})
         handleClose();
     }
+    const handlePetTypeChange = async(event) => {
+        const selectedPetTypeId = event.target.value;
+        if (event.target.value === 0) {
+            refetchProcedures()
+                .then((data) => {
+                    //console.log('refetch',data.data);
+                    setProcedures(data.data)
+                })
+            setFilterType(event.target.value);
+        } else {
+            const res = await getProceduresByType(selectedPetTypeId);
+            const procedures = res.data.map((item) => item.Procedure_table);
+            setProcedures(procedures);
+            setFilterType(event.target.value);
 
+        }
+    }
 
     useEffect(()=>
     {
         refetchProcedures()
             .then((data) => {
-                console.log('refetch',data.data);
+                //console.log('refetch',data.data);
                 setProcedures(data.data)})
 
-    },[procedures])
+    },[])
 
+
+
+    const  [filterType, setFilterType]  = useState('')
+    const handleFilterChange = (event) => {
+        setFilterType(event.target.value);
+    };
     return (
         <>
+            <div className={styles.filterPanel} style={{justifyContent: 'flex-end',marginRight:60}}>
+                {
+                    isAdm &&
+                    <div>
+                        <Button onClick={handleClickOpen}>
+                            <img src={process.env.PUBLIC_URL + '/Vector.svg'} className={styles.icon} width="100"
+                                 height="100"/>
+
+                        </Button>
+                    </div>
+
+                }
+                <div  className={styles.searchByType}>
+                    <label htmlFor="animal-filter" style={{marginRight:10}}>For what type?:</label>
+                    <Select style={{backgroundColor:"white",borderRadius:5}} id='petType'
+                             value={filterType}
+                             onChange={handlePetTypeChange}>
+                        <MenuItem key={0} value={0}>All</MenuItem>
+                        {petTypes && petTypes.map(p =>
+
+                            <MenuItem key={p.id} value={p.id}>
+                                {p.pet_name}
+
+                            </MenuItem>
+                        )}
+                    </Select>
+                </div>
+            </div>
             <div className={classes.root} >
 
                 <Grid container>
-                    {procedures && procedures.map((procedure) => (
+                    {currentProcedures && currentProcedures.map((procedure) => (
                         <ProcedureItem key={procedure.id} isAdm = {isAdm} procedure={procedure} schedule={schedule} onDeleteProcedure={handleDeleteProcedure} />
                     ))}
                 </Grid>
-                {
-                    isAdm &&  <Button onClick={handleClickOpen}>
-                        <img src={process.env.PUBLIC_URL + '/Vector.svg'} className={styles.icon} width="100"
-                             height="100"/>
-
-                    </Button>
-
-
-                }
                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
                     <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                        Add pet
+                        Procedure
                     </DialogTitle>
                     <DialogContent >
                         <ProcedureAddForm  onAdd={handleAddProcedure} petTypes={petTypes}></ProcedureAddForm>
@@ -135,7 +192,15 @@ const ProcedureList = () => {
 
                 </Dialog>
 
+
+                <Pagination
+                    objectsPerPage={objectsPerPage}
+                    totalObjects={procedures.length}
+                    currentPage={currentPage}
+                    onPageChange={handlePageChange}
+                />
             </div>
+
         </>
     );
 };

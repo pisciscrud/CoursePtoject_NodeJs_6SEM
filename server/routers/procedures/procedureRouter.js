@@ -33,6 +33,39 @@ procedureRouter.get('',async (req,res,next)=>{
     }
 })
 
+procedureRouter.put('/:id',roleMiddleware(["admin"]),upload.single('image'),async (req,res,next)=>
+{
+    try
+    {
+
+        let result ;
+
+        const {id, name_procedure, Price, description, procedure_photo1} = req.body;
+
+        if ( procedure_photo1 === undefined)
+        {
+            const procedure_photo=req.file.filename;
+            console.log(procedure_photo);
+            const updateProcedure= await procedureService.updateProcedure(id, name_procedure, Price, description, procedure_photo)
+            result = updateProcedure;
+        }
+       else
+        {
+            const updateProcedure= await procedureService.updateProcedure(id, name_procedure, Price, description, procedure_photo1)
+            result = updateProcedure;
+
+        }
+
+      //  const updateProcedure= await procedureService.updateProcedure(id, name_procedure, Price, description, procedure_photo)
+        res.json(result);
+    }
+    catch (e) {
+
+        next(e);
+
+    }
+})
+
 
 
 procedureRouter.post('', roleMiddleware(["admin"]),  upload.single('image') , async(req,res,next)=>
@@ -100,7 +133,7 @@ procedureRouter.get('/mastersAndProcedures/:id',async (req,res,next)=>
 })
 
 
-procedureRouter.get('/bytype/:id',async (req,res,next)=>{
+procedureRouter.get('/byType/:id',async (req,res,next)=>{
     try
     {
         const {id}=req.params;

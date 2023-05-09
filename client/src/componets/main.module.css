@@ -87,17 +87,17 @@ a
 .noteCard {
     display: flex;
     align-items: center;
-    justify-content: space-between;
+    justify-content: space-around;
     text-decoration: none;
     color: #0e343c;
     max-width: 470px;
-    width: 100%;
-    min-height: 100px;
+
+    min-height: 70px;
     background-color: #dbf2f4;
     border-radius: 10px;
-    margin: 10px;
+    margin: 20px;
     padding: 10px;
-    z-index: 2;
+
     /* position: relative;*/
 }
 
@@ -105,7 +105,7 @@ a
 {
     display: flex;
     flex-direction: column;
-    justify-content: space-between;
+    justify-content: space-around;
 }
 
 .noteCardFooter {
@@ -203,13 +203,15 @@ a
 
 .userLink
 {
+
+
     padding : 5px;
     color:#40226a;
     text-decoration: none;
     border:rgb(243, 207, 251) 2px solid;
     border-radius:5px;
     font-size: 20px;
-    margin-left: 3px ;
+    margin: 3px ;
 
 }
 .userLink:hover 
@@ -217,7 +219,15 @@ a
     border:rgba(245, 193, 253, 0.938) 1px solid;
     background-color:rgba(245, 193, 253, 0.477) ;
 }
-
+button.userLink {
+    padding: 3px;
+    color: #40226a;
+    text-decoration: none;
+    border: rgb(243, 207, 251) 2px solid;
+    border-radius: 5px;
+    font-size: 17px;
+    margin-left: 3px;
+}
 
 .Menu
 {
@@ -277,4 +287,112 @@ a
     margin-top: 10px;
     color: #e15d6b;
   }
-  
+
+
+  .formItem
+  {
+      margin-top: 9px;
+  }
+
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+    margin-right: 20px;
+}
+
+.dropdown button {
+    background-color: transparent;
+    border: none;
+    cursor: pointer;
+    font-size: 14px;
+    margin-right: 10px;
+}
+
+.dropdownContent {
+    display: flex;
+    flex-direction: column;
+    position: absolute;
+    top: 30px;
+    right: 0;
+    background-color: #f9f9f9;
+    min-width: 160px;
+    border: 1px solid #ddd;
+    z-index: 1;
+}
+
+.dropdownContent a {
+    color: black;
+    padding: 12px 16px;
+    text-decoration: none;
+    display: block;
+}
+
+.dropdownContent a:hover {
+    background-color: #f1f1f1;
+}
+
+
+
+/*Pagination* /*/
+.pagination {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+}
+
+.pagination li {
+    margin: 0 5px;
+}
+
+.pagination li a {
+    display: inline-block;
+    margin-right: 5px;
+    padding: 6px 12px;
+    border: 1px solid #40226a;
+    border-radius: 5px;
+    color: #40226a;
+    font-size: 16px;
+    text-decoration: none;
+}
+
+.pagination li.active a {
+    background-color: #40226a;
+    color: #fff;
+}
+
+.filterPanel
+{
+    display: flex;
+    flex-direction: row;
+}
+
+.searchByType
+{
+
+    border: #40226a 1px solid;
+    border-radius: 7px;
+    padding: 5px;
+    margin-top:10px;
+
+}
+
+.confirmationItem
+{
+    border-radius: 5px;
+    border : #40226a solid 2px;
+    padding:10px;
+    margin:20px;
+    background-color: #D59DF5;
+    color:#40226a;
+}
+
+.confirmationItem button
+{
+    padding:5px;
+    margin:5px;
+    border-radius: 5px;
+    background-color: rgba(230, 196, 255, 0.95);
+}

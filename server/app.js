@@ -1,25 +1,25 @@
 const express = require('express');
-
+const fs = require("fs");
 const bodyParser = require('body-parser');
 const authRouter= require('./routers/auth/authRouter')
-
-const fileUpload = require('express-fileupload');
 const masterRouter = require('./routers/masters/masterRouter')
 const procedureRouter = require('./routers/procedures/procedureRouter')
 const petsRouter = require('./routers/pets/PetRouter');
 const scheduleRouter= require('./routers/schedule/scheduleRouter')
 const commentsRouter=require('./routers/Comments/CommentRouter')
 const notificationRouter=require('./routers/notification/NotificationRouter')
-const createWebSocketServer = require('./ws/websocket');
-const http = require("http");
-// const {initWS} = require("./ws/websocket");
-const {Server} = require("socket.io");
+const https = require("https");
 const {initWS} = require("./ws/websocket");
-const multer = require("multer");
 
+const key = fs.readFileSync('./encryption/LAB.key');
+const cert = fs.readFileSync('./encryption/LAB.crt');
+
+const options = {
+    key: key,
+    cert: cert
+};
 const app = express();
-const httpServer = http.createServer(app);
-
+const httpsServer = https.createServer(options,app)
 
 app.use(require('cors')());
 
@@ -44,5 +44,5 @@ app.use('/api/schedule',scheduleRouter);
 app.use('/api/comments',commentsRouter);
 app.use('/api/notifications',notificationRouter)
 
-initWS(httpServer)
-httpServer.listen(5000,()=>{console.log("Server starts on 5000")})
+initWS(httpsServer)
+httpsServer.listen(5000,()=>{console.log("Server starts on 5000")})

@@ -6,41 +6,57 @@ import {Grid} from "@material-ui/core";
 import NoteItem from "../../componets/NoteItem";
 import axios from 'axios'
 import socket from "../../socket";
-
-
+import HistoryIcon from '@mui/icons-material/History';
+import { useParams } from 'react-router-dom';
+import {deletePet} from "../../actions/pet";
+import {deleteRecord} from "../../actions/schedule";
 
 const ScheduleList = () => {
-
+    const { id } = useParams();
     const [notes,setNotes]=useState([]);
-    const {refetch:refetchNotes}=useQuery("notes",()=>getNotesOfUser())
+    const {refetch:refetchNotes}=useQuery("notes",()=>getNotesOfUser(id))
 
 
-    useEffect(()=>
-    {
-        axios.get('http://localhost:5000/api/schedule/update-records')
-            .then(response => {
-
-               // setNotes(response.data)
-
-              console.log(`Updated ${response.data} records!`);
+    useEffect(() => {
+        axios
+            .get("https://localhost:5000/api/schedule/update-records")
+            .then((response) => {
+                console.log(`Updated ${response.data} records!`);
             })
-            .catch(error => {
-               // console.error('Failed to update records:', error);
+            .catch((error) => {
+                console.error("Failed to update records:", error);
             });
-        refetchNotes()
-            .then((data) => {
-                console.log('refetch',data.data);
-                setNotes(data.data)})
+    }, []);
 
-    },[notes])
+    useEffect(() => {
+        refetchNotes().then(({ data }) => {
+            setNotes(data);
+        });
+    }, [id, refetchNotes]);
+    const handleDeleteRecord = async (currentNote) =>
+    {
 
+        if (  window.confirm (`Are you sure that want reject your record ?`))
+        {
+            const res =  await deleteRecord(currentNote.id);
 
+                refetchNotes().then(({ data }) => {
+                    setNotes(data);
+                });
+
+            return res;
+
+        }
+
+    }
     return (
 
         <>
-            <Grid container spacing={3}>
+
+
+            <Grid style={{display:'flex'}} container spacing={3}>
                 {notes && notes.map(note=>(
-                    <NoteItem key={note.id} note={note}  />))
+                    <NoteItem key={note.id} note={note} onDeleteNote={handleDeleteRecord}  />))
                 }
                 </Grid>
 

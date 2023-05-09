@@ -1,6 +1,15 @@
+.full
+{
+  background-color: #ff49c4;
+
+}
+
+
 .container
 {
-  background-color: #FFBAF6;;
-    margin:0px;
+  background-color: #FFBAF6;
+  margin:0px;
+  height:88vh;
+  border-radius: 20px;
 
 }

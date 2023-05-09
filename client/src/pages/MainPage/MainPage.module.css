@@ -1,12 +1,9 @@
 .fullScreenContainer {
     display: flex;
     width: 100%;
+    background-color: #FFBAF6;
+    border-radius: 20px;
 }
-
-.header {
-    color: red;
-}
-
 .icon
 {
     width: 50px;

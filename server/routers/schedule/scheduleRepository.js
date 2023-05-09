@@ -1,6 +1,6 @@
 const express = require('express');
 
-const {DbClient} = require("../../Db/DbClient");
+const {DbClient,ScheduleScalarFieldEnum} = require("../../Db/DbClient");
 
 const createError = require("http-errors");
 
@@ -220,6 +220,11 @@ class ScheduleRepository
              where: { id: { in: recordsToUpdate.map(record => record.id) } },
              data: { status_id: 4 },
          });
+
+
+
+         console.log(updatedRecords)
+         return updatedRecords
          
      }
      catch(e)
@@ -336,14 +341,15 @@ class ScheduleRepository
 
 
 
- async getRecordsOfUser(idUser)
+ async getRecordsOfUser(idUser,id)
  {
      try
      {
 
       const records =   await this.prismaClient.Schedule.findMany({
             where: {
-                owner_id: idUser
+                owner_id: idUser,
+                status_id:Number(id)
             },
           select :
               {
@@ -390,6 +396,238 @@ class ScheduleRepository
      }
 
  }
+
+ async findNearest (id)
+ {
+     try
+     {
+         const record =   await this.prismaClient.Schedule.findFirst({
+             orderBy: { date_: 'asc' },
+             where: {
+                 owner_id: id,
+                 date_: { gte: new Date() }
+             },
+
+             select :
+                 {
+                     id:true,
+                     date_:true,
+                     time:true,
+                     Procedure_table:{
+                         select : {
+                             id:true,
+                             name_procedure: true
+                         }
+                     },
+                     Master :
+                         {
+                             select :
+                                 {
+                                     id:true,
+                                     name_master:true,
+                                     surname_master:true
+                                 }
+                         },
+                     Pet:
+                         {
+                             select :
+                                 {
+                                     nickname:true
+                                 }
+                         },
+                     Status :
+                         {
+                             select :
+                                 {status_name:true}
+                         },
+
+
+                 }
+
+         })
+         console.log('RECORD',record)
+
+         return record;
+     }
+     catch (e)
+     {
+         throw createError(500,"Db Error"+e.message);
+     }
+ }
+
+    async  countProceduresForUserPets(userId) {
+        try {
+            const pets = await this.prismaClient.Pet.findMany({
+                where: { id_owner: userId },
+                select: {
+                    id: true,
+                    nickname: true,
+                    Schedule: {
+                        select: {
+                            id: true,
+                        },
+                        where: {
+                            status_id: 4
+                        }
+                    }
+                }
+            });
+
+            const result = pets.map(pet => ({
+                name: pet.nickname,
+                count: pet.Schedule.length
+            }));
+
+
+            console.log(result);
+            return result
+
+        }
+        catch (e)
+        {
+            throw createError(500,"Db Error"+e.message);
+        }
+
+    }
+
+
+
+    async  getCountProceduresFromSchedule() {
+        try
+        {
+            const procedures = await this.prismaClient.Procedure_table.findMany({
+
+                select: {
+                    id: true,
+                    name_procedure: true,
+                    Schedule: {
+                        select: {
+                            id: true,
+                        },
+                        where: {
+                            status_id: 4
+                        }
+                    }
+                }
+            });
+
+            const result = procedures.map(procedure => ({
+                name_procedure:procedure.name_procedure,
+                count: procedure.Schedule.length
+            }));
+           // console.log(result);
+            return result
+
+        }
+        catch (e)
+        {
+            throw createError(500,"Db Error"+e.message);
+        }
+
+    }
+
+
+    async getCountProceduresByMaster()
+    {
+        try
+        {
+            const masters = await this.prismaClient.Master.findMany({
+
+                select: {
+                    id: true,
+                    name_master: true,
+                    surname_master:true,
+                    Schedule: {
+                        select: {
+                            id: true,
+                        },
+                        where: {
+                            status_id: 4
+                        }
+                    }
+                }
+            });
+            const result = masters.map(m => ({
+                master:`${m.name_master} ${m.surname_master}`,
+                count: m.Schedule.length
+            }));
+
+            return result;
+
+
+        }
+        catch (e)
+        {
+            throw createError(500,"Db Error"+e.message);
+        }
+
+    }
+
+
+    async getByStatusAllRecords()
+    {
+        try
+        {
+            const records = await this.prismaClient.Status.findMany({
+                select: {
+                    id: true,
+                    status_name: true,
+                    Schedule: {
+                        select: {
+                            id: true,
+                        }
+                    }
+
+                }})
+            const result = records.map(m => ({
+                status:m.status_name,
+                count: m.Schedule.length
+            }));
+            return result;
+
+
+        }
+        catch(e)
+        {
+            throw createError(500,"Db Error"+e.message);
+        }
+    }
+
+    async ratingStatisticForAdmin()
+    {
+
+        try
+        {
+            const masters = await this.prismaClient.Master.findMany({
+                select :
+                    {
+                        id:true,
+                        name_master:true,
+                        surname_master:true,
+                    }
+            });
+            const comments = await this.prismaClient.Comments.groupBy({
+                by: ['master_id'],
+                _avg: {
+                    rating: true,
+                },
+            });
+            const mastersWithRating = masters.map((master) => {
+                const masterRating = comments.find((comment) => comment.master_id === master.id);
+                return {
+                   master: `${master.name_master} ${master.surname_master}`,
+                    rating: masterRating ? masterRating._avg.rating : 0,
+                };
+            });
+            return mastersWithRating.sort((a, b) => a.rating - b.rating);
+        }
+        catch(e)
+        {
+            throw createError(500,"Db Error"+e.message);
+        }
+
+    }
+
 
 
 }

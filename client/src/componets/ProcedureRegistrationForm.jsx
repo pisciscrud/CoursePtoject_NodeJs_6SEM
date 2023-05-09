@@ -4,6 +4,14 @@ import {MenuItem} from "@mui/material";
 import {DatePicker} from "@mui/x-date-pickers";
 import {sendRequestOnProcedure} from '../actions/schedule'
 import { addDays } from 'date-fns';
+import styles from './main.module.css'
+
+
+
+
+
+
+
 const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => {
     const [time, setTime] = useState('10:00')
     const [date, setDate] = useState(new Date())
@@ -22,11 +30,7 @@ const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => 
         return new Date(date.getFullYear(), date.getMonth(), date.getDate())
     }
 
-   /* function  getTime(time)
-    {
-        const time1 = time.getUTCMinutes() < 10 ? time.getUTCHours() +':0' + time.getUTCMinutes() :time.getUTCHours() + ':' + time.getUTCMinutes();
-        return time1;
-    }*/
+
 
     function isEqualDates(a, b) {
         return a.getTime() === b.getTime()
@@ -56,7 +60,7 @@ const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => 
     }
 // TODO ВРЕМЯ ПРОВЕРИТЬ
     const getAvailableMasters = () => {
-        console.log(time);
+
         const currentDate = date;
         const currentTime = time;
         const available = masters.filter(master => {
@@ -66,20 +70,43 @@ const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => 
                 const pickedDate = getNoTimeDate(new Date(currentDate))
               //  const sTime = new Date(s.time)
                 const isEqualDate = isEqualDates(sDate, pickedDate)
-                return (isEqualDate  && ( s.time === currentTime))
+                //TODO TEST THIS
+                return (isEqualDate  && ( s.time === currentTime) && (s.status_id === 1 || s.status_id === 2))
             })
             return !isNotAvailable;
         })
         setAvailableMasters(available)
     }
 
-    const handleSubmit =  async () =>
-    {
-        try {
-            console.log(availablePet.id, availableMaster.id)
-         const res = sendRequestOnProcedure(availablePet.id, availableMaster.id,procedure.id,date,time)
-            console.log(res)
 
+    const [errors, setErrors] = useState('');
+    const validateForm = () => {
+
+        const form = document.querySelector('#myForm');
+        const inputs = form.querySelectorAll('Select');
+        let isValid = true;
+
+        inputs.forEach(input => {
+            if (!input.value) {
+                isValid = false;
+            }
+        });
+
+        return isValid;
+    }
+    const handleSubmit =  async (event) =>
+    {
+        event.preventDefault();
+
+        try {
+            // console.log(availablePet.id, availableMaster.id)
+            if (validateForm && availablePet.id && date > minDate) {
+                const res = sendRequestOnProcedure(availablePet.id, availableMaster.id, procedure.id, date, time)
+                //console.log(res)
+            } else {
+                alert('your form is not valid')
+
+            }
         }
         catch (e)
         {
@@ -92,25 +119,40 @@ const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => 
         const pet = pets.find(p => p.id === petId)
         setAvailablePet(pet)
     }
-
+    const { PUBLIC_URL } = process.env
     return (
-        <form onSubmit={handleSubmit} >
-            {pets && pets.length>0  ?
-            <Select
-                value={availablePet.id}
-                onChange={handlePetChange}>
+        <form  id="myForm" onSubmit={handleSubmit} style={{backgroundColor: 'rgb(220,154,254)' }} >
 
-                    {pets.map(p =>
+                <img style={{
+                    position: 'absolute',
+                    top: 0,
+                    right: 0,
+                    width: '200px',
+                    height: '200px'
+                }} src={PUBLIC_URL + '/formProcedure.jpg'}/>
 
-                    <MenuItem key={p.id} value={p.id}>
-                        {p.nickname}
+                <div  className={styles.formItem}>
+                    {errors.nickname && <p style={{color:'red'}}>{errors}</p>}
+                    <label style={{padding : 10}} for='pet'>Pet:</label>
+                    {pets && pets.length>0  ?
+                    <Select  id='pet'
+                        value={availablePet.id}
+                        onChange={handlePetChange}>
+                        {pets.map(p =>
 
-                    </MenuItem>
-                )}
-            </Select>
-                : <p>No pets</p>
-            }
-            <Select
+                            <MenuItem key={p.id} value={p.id}>
+                                {p.nickname}
+
+                            </MenuItem>
+                        )}
+                    </Select>
+                    : <p>No pets</p>
+                    }
+                </div>
+
+            <div className={styles.formItem}>
+                <label style={{padding: 10}} for='time'>Time:</label>
+            <Select id='time'
                 value={time}
                 onChange={handleTimeChange}>
                 <MenuItem value="10:00">10:00</MenuItem>
@@ -123,27 +165,35 @@ const ProcedureRegistrationForm = ({  procedure, pets,  masters, schedule }) => 
                 <MenuItem value="13:00">13:00</MenuItem>
 
             </Select>
-            <DatePicker
+                </div>
+            <div className={styles.formItem}>
+                <label style={{padding: 10}} for='date'>Date:</label>
+            <DatePicker id='date'
                 value={date}
                 onChange={handleDateChange}
                 minDate={minDate}
-                label="Выберите дату"/>
+                label="Choose date"/>
 
-
+                </div>
+            <div className={styles.formItem}>
+                <label style={{padding: 10}} for='Master'>Master:</label>
             {availableMasters && availableMasters.length>0
-                ? <Select
+                ? <Select id='Master'
                     value={availableMaster.id}
                     onChange={handleMasterChange}>
                     {
                         availableMasters.map(m =>
                         <MenuItem key={m.id} value={m.id}>
-                            {m.name_master}
+                            {m.name_master} {m.surname_master}
                         </MenuItem>)
                     }
                 </Select>
                 : <p>No masters</p>
             }
-            <Input type="submit" value="Send"/>
+                </div>
+                <div className={styles.formItem}>
+            <Input className={styles.pill} style={{color:'white'}} type="submit" value="Send"/>
+                </div>
         </form>
     );
 };

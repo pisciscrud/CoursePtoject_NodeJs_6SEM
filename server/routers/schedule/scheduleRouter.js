@@ -10,7 +10,7 @@ const scheduleService = new ScheduleService();
 const {getWS,emitNotification, allSockets} = require("../../ws/websocket");
 
 scheduleRouter.get(
-    '/recordsOfUser',
+    '/recordsOfUser/:id',
     // async (req, res, next) => {
     //     console.log('scheduleRouter')
     //     next()
@@ -20,9 +20,10 @@ scheduleRouter.get(
         try
         {
             const idUser= req.userId;
-           // console.log(idUser);
-            const recordsOfUser = await scheduleService.getRecordsOfUser(idUser);
-          //  console.log(recordsOfUser)
+            const id= req.params;
+
+            const recordsOfUser = await scheduleService.getRecordsOfUser(idUser,id.id);
+
 
             res.json(recordsOfUser);
         }
@@ -44,6 +45,89 @@ scheduleRouter.get('/all',async (req,res,next)=>
         {}
 
 
+})
+
+scheduleRouter.get('/graphic',roleMiddleware(["user"]),async (req,res,next)=> {
+    try {
+        const idUser = req.userId;
+        console.log('aaa',req.userId)
+        const result = await scheduleService.procedureForPets(idUser);
+        res.json(result);
+    }
+    catch(e)
+    {
+        next(e);
+    }
+})
+
+scheduleRouter.get('/graphic/circle-diagram',roleMiddleware(['admin']), async (req,res,next)=>
+{
+    try
+    {
+        const result = await scheduleService.getProcedures();
+        res.json(result);
+
+
+    }
+    catch(e)
+    {
+        next(e);
+    }
+})
+scheduleRouter.get('/graphic/masters',roleMiddleware(['admin']),async (req,res,next)=>
+{
+    try
+    {
+        const result = await scheduleService.getStatisticAboutMaster();
+        res.json(result);
+    }
+    catch(e)
+    {
+        next(e);
+    }
+})
+
+
+scheduleRouter.get('/graphic/status',roleMiddleware(['admin']),async (req,res,next)=>
+{
+    try
+    {
+        const result = await scheduleService.getStatusStatistic();
+        res.json(result);
+    }
+    catch(e)
+    {
+        next(e);
+    }
+})
+
+
+scheduleRouter.get('/graphic/rating',roleMiddleware(['admin']),async (req,res,next)=>
+{
+    try
+    {
+        const result = await scheduleService.getRatingStatistic();
+        res.json(result);
+    }
+    catch(e)
+    {
+        next(e);
+    }
+})
+
+scheduleRouter.get('/nearest',roleMiddleware(['user']),async (req,res,next)=>
+{
+    try
+    {
+
+
+        const idUser= req.userId;
+        const record = await scheduleService.nearestForUser(idUser)
+        res.json(record);
+    }
+    catch(e) {
+        next(e)
+    }
 })
 
 scheduleRouter.get('/current-day',roleMiddleware (["admin"]), async  (req,res,next)=>
@@ -112,6 +196,22 @@ scheduleRouter.post('/submit',roleMiddleware(["user"]),async (req,res,next)=>
 
 })
 
+
+scheduleRouter.delete('/:id',roleMiddleware(["user"]),async (req,res,next)=>
+{
+    try
+    {
+        const idNote=req.params.id;
+        const result = await scheduleService.deleteUserRecord(idNote);
+        return res.json(result);
+    }
+    catch(e)
+    {
+        next(e);
+
+    }
+})
+
 scheduleRouter.post('/confirm',roleMiddleware(["admin"]),async (req,res,next)=>
 {
     const ws = getWS()
@@ -140,6 +240,14 @@ scheduleRouter.post('/confirm',roleMiddleware(["admin"]),async (req,res,next)=>
     }
 
 })
+
+
+
+
+
+
+
+
 
 
 

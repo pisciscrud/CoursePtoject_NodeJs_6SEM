@@ -1,7 +1,7 @@
 import axios from "axios";
 
 
-const API_URL = "http://localhost:5000/api/auth/";
+const API_URL = "https://localhost:5000/api/auth/";
 
 export  const registeration = async (FullName,email,login,password) => {
 
@@ -28,13 +28,14 @@ catch (err)
 
 export const getPetsOfUser = async()=>
 {
-  const response = await axios.get('http://localhost:5000/api/pets/petsOfUser',{headers: authHeader()})
+  const response = await axios.get('https://localhost:5000/api/pets/petsOfUser',{headers: authHeader()})
     console.log('pets' ,response.data);
     return response.data;
 }
-export const getNotesOfUser = async()=>
+export const getNotesOfUser = async(id)=>
 {
-    const response = await axios.get('http://localhost:5000/api/schedule/recordsOfUser',{headers: authHeader()})
+
+    const response = await axios.get(`https://localhost:5000/api/schedule/recordsOfUser/${id}`,{headers: authHeader()})
         console.log('notes' ,response.data);
         return response.data;
 }
@@ -84,7 +85,7 @@ export const sendComment = async (  content,rating, master_id, procedure_id,reco
      console.log('record_id',record_id);
        const date_=new Date();
        console.log(date_)
-       const resp = axios.post('http://localhost:5000/api/comments/add',
+       const resp = axios.post('https://localhost:5000/api/comments/add',
             {
                 date_,
                 rating,

@@ -22,19 +22,15 @@ const NotificationPage = () => {
     useEffect(()=>{
 
         if(getIdFromToken()) {
-            console.log(getIdFromToken())
+
             socket.emit('subscribe', { userId: getIdFromToken() })
             socket.on('admin-notification', (data) => {
                 
                 setNotifications((notifications)=>[...notifications,data.notification])
             })
         }
-
-
-        
-   
         fetchNotifications().then((res)=>{
-            console.log(res);
+
             setNotifications(res)});
         socket.on('new-notification', (res) => {
            getIdFromToken().then((id) => {
@@ -53,6 +49,7 @@ const NotificationPage = () => {
 
       return await  axios.put(`/api/notifications/accept`,{notificationId},{headers: authHeader()});
       };
+
     return (
         <div>
 

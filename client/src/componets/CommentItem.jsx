@@ -14,23 +14,20 @@ function formatDate(dateStr) {
 }
 const CommentItem = ({comment}) => {
     return (
-        <div className={styles.noteCard}>
+        <div style={{ marginLeft:30}} className={styles.noteCard}>
 
 
-            <div className={styles.noteCardBody}>
-                <span className={styles.noteCardNameProcedure }>{comment.Procedure_table.name_procedure}</span>
+            <div  className={styles.noteCardBody}>
+                <span>Procedure:{comment.Procedure_table.name_procedure}</span>
                 <span>Master: {comment.Master.name_master}</span>
                 <span> {comment.Master.surname_master}</span>
-               <span>{comment.content}</span>
+               <b>{comment.content}</b>
                 <RatingFromBd rating={comment.rating} />
             </div>
-            <p>
 
-
-            </p>
             <div className={styles.noteCardFooter}>
                 <span>{formatDate(comment.date_)}</span>
-
+                <span>Author:    {comment.User_table.full_name}</span>
 
             </div>
 

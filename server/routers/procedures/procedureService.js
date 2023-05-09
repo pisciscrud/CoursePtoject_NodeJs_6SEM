@@ -106,6 +106,17 @@ class ProcedureService{
 
         }
     }
+    async updateProcedure (id, name_procedure, Price, description, procedure_photo)
+    {
+        try
+        {
+            return await this.procedureRepository.updateProcedure(id, name_procedure, Price, description, procedure_photo)
+        }
+        catch (e)
+        {
+          console.log(e.message)
+        }
+    }
 
 
 }

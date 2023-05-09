@@ -32,7 +32,7 @@ class ProcedureRepository {
                 return { pet_id: Number(pet.pet_id) };
             });
 
-            console.log(result);
+
 
             const procedureWithSameName = await this.prismaClient.Procedure_table.findFirst(
                 {where: {name_procedure: name_procedure}}
@@ -63,17 +63,19 @@ class ProcedureRepository {
 
 
     async updateProcedure(id, name_procedure, Price, description, procedure_photo) {
+
         try {
             const procedure = await this.prismaClient.Procedure_table.update(
                 {
                     where: {
                         id
                     },
-                    data:
-                    name_procedure,
-                    Price,
-                    description,
-                    procedure_photo
+                    data: {
+                        name_procedure,
+                        Price,
+                        description,
+                        procedure_photo
+                    }
                 }
             )
 
@@ -146,15 +148,19 @@ class ProcedureRepository {
 
                     Procedure_table: {
                         select: {
+                            id:true,
                             name_procedure: true,
                             Price:true
                         }
                     },
                     Master: {
-                        select: {
-                            id:true,
-                            name_master: true,
-                            surname_master: true
+                       include:{
+                           Master_to_Procedure:  {
+                               include :
+                                   {
+                                       Procedure_table:true
+                                   }
+                           }
                         }
                     }
                 }
@@ -243,6 +249,7 @@ class ProcedureRepository {
          throw createError(500, "Db error:" + e.message);
      }
  }
+
 
 
 

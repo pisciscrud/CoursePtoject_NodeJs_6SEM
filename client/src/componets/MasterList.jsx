@@ -6,10 +6,10 @@ import axios from 'axios';
 import MasterItem from "./MasterItem";
 import React, { useState, useEffect } from 'react';
 import {makeStyles, withStyles} from '@material-ui/core/styles';
-import {Button, Card, CardContent, CardHeader, Grid} from '@material-ui/core';
+import {Button, Card, CardContent, CardHeader, Grid, Select} from '@material-ui/core';
 import Pagination from '../componets/Pagination';
 import {useQuery} from "react-query";
-import {deleteProcedure, getProceduresAll} from "../actions/procedure";
+import {deleteProcedure, getProceduresAll, getProceduresByType} from "../actions/procedure";
 import styles from "./main.module.css";
 import Dialog from "@material-ui/core/Dialog";
 import MuiDialogTitle from "@material-ui/core/DialogTitle";
@@ -19,12 +19,13 @@ import CloseIcon from "@material-ui/icons/Close";
 import MuiDialogContent from "@material-ui/core/DialogContent";
 
 
-
+import {getMastersByProcedure} from '../actions/master'
 
 import DialogActions from "@material-ui/core/DialogActions";
 import MasterAddForm from "./MasterAddForm";
 import {isAdmin} from "../actions/user";
 import {fetchMasters,deleteMaster} from "../actions/master";
+import {MenuItem} from "@mui/material";
 
 
   const useStyles = makeStyles((theme) => ({
@@ -78,7 +79,7 @@ const MasterList = () => {
     const {refetch:refetchMasters}=useQuery('masters',()=>fetchMasters())
 
 
-
+   const [filterProcedure,setFilterProcedure] = useState();
     const handleAddMaster = async() =>
     {
         refetchMasters()
@@ -96,7 +97,7 @@ const MasterList = () => {
         refetchMasters()
             .then((data)=>{
                 setMasters(data.data)})
-    }, [masters]);
+    }, []);
 
     const handlePageChange = (pageNumber) => {
         setCurrentPage(pageNumber);
@@ -118,9 +119,44 @@ const MasterList = () => {
         }
 
     }
+    const handleProcedureChange= async(event) => {
+        const selectedProcedureId = event.target.value;
+        if (event.target.value === 0) {
+            refetchMasters()
+                .then((data) => {
+                    //console.log('refetch',data.data);
+                    setMasters(data.data)
+                })
+            setFilterProcedure(event.target.value);
+        } else {
+            const res = await getMastersByProcedure (selectedProcedureId);
+            const masters = res.data.map((item) => item.Master);
+            setMasters(masters);
+            setFilterProcedure(event.target.value);
+
+        }
+    }
     return (
         <div className={classes.root} >
 
+
+            <div className={styles.filterPanel} style={{justifyContent: 'flex-end',marginRight:60}}>
+                <div  className={styles.searchByType}>
+                    <label htmlFor="animal-filter" style={{marginRight:10}}>For what procedure?:</label>
+                    <Select style={{backgroundColor:"white",borderRadius:5}} id='petType'
+                            value={filterProcedure}
+                            onChange={handleProcedureChange}>
+                        <MenuItem key={0} value={0}>All</MenuItem>
+                        {procedures && procedures .map(p =>
+
+                            <MenuItem key={p.id} value={p.id}>
+                                {p.name_procedure}
+
+                            </MenuItem>
+                        )}
+                    </Select>
+                </div>
+            </div>
             <Grid container>
                 {currentMasters.map((master) => (
                     <MasterItem procedures={procedures} key={master.id} master={master} isAdm={isAdm}/>
@@ -136,12 +172,11 @@ const MasterList = () => {
 
             }
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
-                <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                <DialogTitle id="customized-dialog-title">
                     Add Master
                 </DialogTitle>
                 <DialogContent >
                     <MasterAddForm  onAdd={handleAddMaster} procedures={procedures}></MasterAddForm>
-
                 </DialogContent >
                 <DialogActions>
                     <Button autoFocus onClick={handleClose} color="primary">
@@ -150,16 +185,16 @@ const MasterList = () => {
                 </DialogActions>
             </Dialog>
 
+
+            <Pagination
+                objectsPerPage={objectsPerPage}
+                totalObjects={masters.length}
+                currentPage={currentPage}
+                onPageChange={handlePageChange}
+            />
+
         </div>
-//</>
-        //     <Pagination
-        //         objectsPerPage={objectsPerPage}
-        //         totalObjects={masters.length}
-        //         currentPage={currentPage}
-        //         onPageChange={handlePageChange}
-        //     />
-        //
-        // </div>
+
     );
 };
 

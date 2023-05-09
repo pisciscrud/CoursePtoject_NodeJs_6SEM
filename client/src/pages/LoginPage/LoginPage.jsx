@@ -15,13 +15,14 @@ const Login = () => {
     const handleSubmit = async (event) => {
         //event.preventDefault();
         await loginIn(login,password);
+
         const isAdm = await isAdmin()
         console.log(isAdm.data);
         if (isAdm) {
             navigate("/admin");
         }
         else {
-          navigate("/home");
+          navigate("/app");
        }
         window.location.reload();
 

@@ -26,6 +26,11 @@ import axios from "axios";
 import { useQuery } from 'react-query';
 import {authHeader} from "../actions/procedure";
 import {isAdmin} from "../actions/user";
+import ProcedureUpdateForm from "./ProcedureUpdateForm";
+import {getPetTypes} from "../actions/pet";
+
+
+
 
 const useStyles = makeStyles({
     root: {
@@ -33,11 +38,11 @@ const useStyles = makeStyles({
         margin:30,
         borderRadius: 20,
         padding: 15,
-        background:"red"
+        background:"white"
 
     },
     media: {
-        height: 140,
+        height: 200,
         borderRadius: 20,
 
     },
@@ -53,8 +58,9 @@ const styles = (theme) => ({
         top: theme.spacing(1),
         color: theme.palette.grey[500],
     },
-});
 
+});
+const { PUBLIC_URL } = process.env
 const DialogTitle = withStyles(styles)((props) => {
     const { children, classes, onClose, ...other } = props;
     return (
@@ -81,6 +87,7 @@ const DialogContent = withStyles((theme) => ({
 const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
+    const [open1,setOpen1]=React.useState(false);
    const [masters, setMasters] = useState([])
     //const [availablePetType,setAvailablePetType]=useState([])
   const [pets,setPets]=useState([])
@@ -88,7 +95,19 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
 
 
 
+    const handleClickOpen1 = () => {
+        setOpen1(true);
+    };
+    const handleClose1 = () => {
+        setOpen1(false);
+    };
 
+    const {refetch:refetchPetTypes,data:petTypes}=useQuery("petTypes",()=>getPetTypes())
+
+  const  handleUpdatePhoto = ()=>
+    {
+        handleClose1();
+    }
 
 
     const handleClickOpen = () => {
@@ -108,7 +127,7 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
 
 
     useEffect(() => {
-        axios.get(`http://localhost:5000/api/procedures/mastersAndProcedures/${procedure.id}`)
+        axios.get(`https://localhost:5000/api/procedures/mastersAndProcedures/${procedure.id}`)
             .then(response => {
                 console.log('masters:', response.data)
                     setMasters(response.data.map(item => item.Master))
@@ -120,7 +139,7 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
 
             if (!isAdm) {
 
-                axios.get(`http://localhost:5000/api/procedures/petsOfUser/${procedure.id}`, {headers: authHeader()})
+                axios.get(`https://localhost:5000/api/procedures/petsOfUser/${procedure.id}`, {headers: authHeader()})
                     .then(response => {
                         console.log('ytn', response.data)
                         setPets(response.data)
@@ -144,38 +163,55 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
                 <CardActionArea>
                     <CardMedia
                         className={classes.media}
-                        image={`http://localhost:5000/${procedure.procedure_photo}`}/>
+                        image={`https://localhost:5000/${procedure.procedure_photo}`}/>
                     <CardContent>
-                        <h2>{procedure.name_procedure}</h2>
-                        <p>Price:{procedure.Price}$</p>
-                        <h4>{procedure.description}</h4>
+                        <h4>{procedure.name_procedure}</h4>
+                        <h6>Price:{procedure.Price}$</h6>
+                        <h6>Description:{procedure.description}</h6>
                     </CardContent>
                 </CardActionArea>
                 { !isAdm ?  <Button  style={{
                     backgroundColor:"#111F75",
-                    margin:"10px",
+                    margin:"0px",
                     color:"white"
                 }} onClick={handleClickOpen}>
                    Get service
                 </Button> :
+                    <>
                     <Button  style={{
                         backgroundColor:"#111F75",
-                        margin:"10px",
+                        margin:"7px",
                         color:"white"
                     }} onClick={handleDeleteProcedure}>
                        Delete
                     </Button>
+                        <Button style={{
+                            backgroundColor:"#111F75",
+                            margin:"7px",
+                            color:"white"
+                        }} onClick={handleClickOpen1} >Update</Button>
+                        </>
                 }
             </Card>
+            <Dialog onClose={handleClose1} aria-labelledby="customized-dialog-title" open={open1} style={{backgroundColor: 'rgb(220,154,254)' }}>
+                <DialogContent>
+                            <ProcedureUpdateForm onUpdate={handleUpdatePhoto}    procedure={procedure} petTypes={petTypes}/>
+                </DialogContent>
+                <DialogActions style={{backgroundColor: 'rgb(220,154,254)' }}>
+                    <Button autoFocus onClick={handleClose1} color="primary">
+                        Close
+                    </Button>
+                </DialogActions>
+            </Dialog>
+
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
-                <DialogTitle id="customized-dialog-title" onClose={handleClose}>
-                 Procedure
-                </DialogTitle>
-                <DialogContent >
-                 {/*<CardMedia  style={{width:"450px",height:"200px"}} className={classes.media}   image={`http://localhost:5000/${master.photo_master}`}></CardMedia>*/}
-                    <Typography gutterBottom>
-                  {procedure.name_procedure}
-                    </Typography>
+
+                <DialogContent  style={{backgroundColor: 'rgb(220,154,254)' }}>
+
+
+                    <div  className={styles.formItem} >
+                     <label style={{padding : 10}} for='procedure'> Procedure: <Typography gutterBottom id='procedure'> {procedure.name_procedure} </Typography></label>
+                        </div>
                     <ProcedureRegistrationForm
                         //TODO only pets that can do this procedure
                         procedure={procedure}
@@ -184,7 +220,7 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
                         schedule={schedule}
                     />
                 </DialogContent >
-                <DialogActions>
+                <DialogActions style={{backgroundColor: 'rgb(220,154,254)' }}>
                     <Button autoFocus onClick={handleClose} color="primary">
                         Close
                     </Button>

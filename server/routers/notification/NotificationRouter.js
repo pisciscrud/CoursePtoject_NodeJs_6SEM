@@ -4,7 +4,7 @@ const path = require('path');
 
 const NotificationService = require('./NotificationService');
 const roleMiddleware = require("../../middlewares/roleMiddleware");
-
+const { allSockets} = require("../../ws/websocket");
 const notificationRouter = express.Router();
 
 
@@ -30,6 +30,17 @@ notificationRouter.get('/',roleMiddleware(["user"]), async(req,res,next)=>{
     try {
         const idUser = req.userId
         const notifications = await notificationService.getNotifications(idUser);
+        const notification1 = await notificationService.getNotionAboutRecord(idUser);
+       console.log(notification1);
+        if (notification1)
+        {
+            const socket = allSockets.find(item => item.userId = notification1.user_id).socket;
+
+            if(socket) {
+                socket.emit('admin-notification', { notification: notification1 })
+            }
+        }
+
         res.json(notifications)
     }
     catch (e)
@@ -37,6 +48,24 @@ notificationRouter.get('/',roleMiddleware(["user"]), async(req,res,next)=>{
         next(e);
     }
 })
+
+
+notificationRouter.delete('/:id',roleMiddleware(["user"]),async (req,res,next)=>
+{
+    try
+    {
+        const {id} =req.params;
+        console.log('ID',id);
+        return  await notificationService.deleteNotification(id)
+    }
+    catch (e)
+    {
+        next(e);
+    }
+
+})
+
+
 
 
 

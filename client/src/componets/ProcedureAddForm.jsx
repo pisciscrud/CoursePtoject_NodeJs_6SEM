@@ -35,39 +35,8 @@ const ProcedureAddForm = ({petTypes,onAdd}) => {
             );
         }
     };
-    const handleImageChange = (event) => {
-        // const file = event.target.files[0];
-        // if (file && file.type.includes('image/')) {
-        //     setError(null);
-        //     // изменяем размер и качество изображения
-        //     ImageResizer.imageFileResizer(
-        //         file,
-        //         200, // новая ширина
-        //         200, // новая высота
-        //         'JPEG', // формат
-        //         80, // качество
-        //         0, // поворот (0 - не поворачивать)
-        //         (uri) => {
-        //             // после изменения сохраняем сжатое изображение
-        //             const byteString = atob(uri.split(',')[1]);
-        //             const mimeString = uri.split(',')[0].split(':')[1].split(';')[0];
-        //             const ab = new ArrayBuffer(byteString.length);
-        //             const ia = new Uint8Array(ab);
-        //             for (let i = 0; i < byteString.length; i++) {
-        //                 ia[i] = byteString.charCodeAt(i);
-        //             }
-        //             const blob = new Blob([ab], { type: mimeString });
-        //             setImage(blob);
-        //             setImagePreview(URL.createObjectURL(blob));
-        //         },
-        //         'base64' // выходной формат (base64 или blob)
-        //     );
-        // } else {
-        //     setError('Please choose an image file');
-        //     setImage(null);
-        //     setImagePreview(null);
-        // }
 
+    const handleImageChange = (event) => {
             const file = event.target.files[0];
             if (file && file.type.includes('image/')) {
                 setError(null);
@@ -76,9 +45,8 @@ const ProcedureAddForm = ({petTypes,onAdd}) => {
                 setError('Please choose an image file');
                 setImage(null);
             }
-
-
     };
+
     const handleAddProcedure = async (event)=>
     {
         event.preventDefault()
@@ -96,7 +64,7 @@ const ProcedureAddForm = ({petTypes,onAdd}) => {
             const result = petTypesForProcedure.map(pet_id => ({ pet_id }));
             formData.append('Procedure_to_pet', JSON.stringify(result))
             console.log(formData);
-            const res = await axios.post('http://localhost:5000/api/procedures',
+            const res = await axios.post('https://localhost:5000/api/procedures',
                 formData,
                 {headers:{ ...authHeader(), 'Content-Type': 'multipart/form-data'}})
 

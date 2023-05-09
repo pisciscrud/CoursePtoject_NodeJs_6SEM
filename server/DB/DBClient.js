@@ -1,5 +1,5 @@
-const {PrismaClient} = require("@prisma/client");
+const {PrismaClient,ScheduleScalarFieldEnum} = require("@prisma/client");
 
 const DbClient = new PrismaClient();
 
-module.exports = {DbClient};
+module.exports = {DbClient,ScheduleScalarFieldEnum};

@@ -12,9 +12,6 @@ import ConfirmationItem from "../../componets/ConfirmationItem";
 import socket from '../../socket'
 const ConfirmationPage = () => {
 
-
-
-
     const navigate = useNavigate();
   const [records,setRecords]=useState([])
     const handleLogout = () => {
@@ -29,7 +26,6 @@ const ConfirmationPage = () => {
     {
         refetchRecords()
             .then((data) => {
-                console.log('refetch',data.data);
                 setRecords(data.data)})
 
     },[records])
@@ -41,22 +37,13 @@ const ConfirmationPage = () => {
 
     return (
         <div>
-            {/*<Header></Header>*/}
-            {/*<MenuAdmin></MenuAdmin>*/}
-            {/*<Outlet/>*/}
-
-            {/*<PetsList></PetsList>*/}
             <Grid container>
                 {records && records.map((record) => (
-                   // console.log(record)
-                    <ConfirmationItem key={record.id} record={record}  onConfirm={onConfirm} /*pets={pets}*/ />
+                    <ConfirmationItem key={record.id} record={record}  onConfirm={onConfirm}/>
                 ))}
             </Grid>
 
-            <div className={styles.logout}><button className={styles.logoutBotton} onClick={handleLogout}>Logout</button></div>
-
         </div>
-
     );
 };
 

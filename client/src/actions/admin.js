@@ -13,7 +13,7 @@ export const GetWaitingRecords = async()=>
 {
     try
     {
-        const records = await axios.get('http://localhost:5000/api/schedule/waiting',{headers: authHeader()})
+        const records = await axios.get('https://localhost:5000/api/schedule/waiting',{headers: authHeader()})
 
         return records.data;
     }
@@ -30,7 +30,7 @@ export const handleConfirm = async(status_id, record_id)=>
 
         try{
 
-            const res = await axios.post('http://localhost:5000/api/schedule/confirm',
+            const res = await axios.post('https://localhost:5000/api/schedule/confirm',
                 {
                      status_id,
                     record_id
@@ -46,7 +46,7 @@ export const getScheduleOfDay = async ()=>
 {
     try
     {
-        const records= await axios.get('http://localhost:5000/api/schedule/current-day',{headers: authHeader()})
+        const records= await axios.get('https://localhost:5000/api/schedule/current-day',{headers: authHeader()})
         console.log('schedule',records.data)
         return records.data;
     }
@@ -68,7 +68,7 @@ export const addProcedure=async(formData)=>
 
 
 
-        const proc = await axios.post('http://localhost:5000/api/procedures',
+        const proc = await axios.post('https://localhost:5000/api/procedures',
             // {
             //
             //

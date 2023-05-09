@@ -7,9 +7,9 @@ let _io = null;
  const allSockets = []
 
 
-function initWS(http) {
+function initWS(https) {
 
-  const  io = new Server(http, {
+  const  io = new Server(https, {
         cors: {
             origin: '*'
         }
@@ -35,19 +35,6 @@ function initWS(http) {
         
     })
 
-
-      //  console.log(`⚡: ${socket.id} user just connected!`);
-        if (socket.handshake.query.channel === 'new-notification') {
-            console.log(`⚡: ${socket.id} user just connected!`);
-            const token = socket.handshake.auth.token // read JWT token from auth object
-            console.log(socket.userId);
-            const decoded = jwt.verify(token, process.env.SECRET_KEY) // verify token
-            const userId = decoded.id //
-            socket.userId = userId
-            console.log('socket_user',socket.userId);
-            // Send the payload to the client
-
-        }
     })
 
     // io.on("disconnect", () => {
