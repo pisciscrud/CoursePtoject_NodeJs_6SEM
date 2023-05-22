@@ -30,13 +30,13 @@ const StatisticAdminPage = () => {
             <div style={{gridArea: 'a', margin:5,width: "350px", height: "300px", backgroundColor: "#fff",borderRadius:20}}>
                 <DoughnutChart data={data} />
             </div>
-            <div style={{gridArea: 'b',  margin:5,paddingTop:70, width: "500px", height: "300px", backgroundColor: "#fff",borderRadius:20}}>
+            <div style={{gridArea: 'b',  margin:5,paddingTop:20, width: "500px", height: "280px", backgroundColor: "#fff",borderRadius:20}}>
                 <MasterChart data1={data1}/>
             </div>
-            <div style={{gridArea: 'c', margin:5,width: "350px", height: "300px", backgroundColor: "#fff",borderRadius:20}}>
+            <div style={{gridArea: 'c', margin:5,width: "350px", height: "290px", backgroundColor: "#fff",borderRadius:20}}>
                 <StatusChart data2={data2}/>
             </div>
-            <div style={{paddingTop:70, margin:5,gridArea: 'd' ,width: "500px", height: "300px", backgroundColor: "#fff",borderRadius:20}}>
+            <div style={{paddingTop:20, margin:5,gridArea: 'd' ,width: "500px", height: "280px", backgroundColor: "#fff",borderRadius:20}}>
                 <RatingChart data4={data4}></RatingChart>
             </div>
         </div>

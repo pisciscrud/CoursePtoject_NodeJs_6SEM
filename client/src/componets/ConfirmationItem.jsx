@@ -7,7 +7,7 @@ import CalendarMonthIcon from '@mui/icons-material/CalendarMonth';
 // {
 //
 // }
-const ConfirmationItem = ({record,onConfirm}) => {
+const ConfirmationItem = ({record,onConfirm,onReject}) => {
 
     function  getTime(time) {
         const month = time.getMonth() + 1;
@@ -18,14 +18,15 @@ const ConfirmationItem = ({record,onConfirm}) => {
 
     const onApprove = async () =>
     {
-        onConfirm(record.id);
-     await  handleConfirm(2,record.id)
+        const res  = onConfirm(record);
+        return res;
+
     }
 
-    const onReject = async ()  =>
+    const onReject1 = async ()  =>
     {
-        onConfirm(record.id);
-        await  handleConfirm(3,record.id)
+        const res  =   onReject(record)
+        return res;
     }
 
     return (
@@ -43,7 +44,7 @@ const ConfirmationItem = ({record,onConfirm}) => {
             </div>
 
             <button onClick={onApprove}>Confirm </button>
-            <button  onClick={onReject}> Reject</button>
+            <button  onClick={onReject1}> Reject</button>
         </div>
     );
 };

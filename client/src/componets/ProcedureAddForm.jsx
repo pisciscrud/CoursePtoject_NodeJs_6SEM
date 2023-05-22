@@ -10,6 +10,13 @@ import axios from "axios";
 import {authHeader} from "../actions/procedure";
 import {useNavigate} from "react-router-dom";
 
+import { AddNewProcedure } from '../actions/procedure';
+
+import styles from './main.module.css';
+
+
+
+
 const ProcedureAddForm = ({petTypes,onAdd}) => {
     const history = useNavigate();
     const [price,setPrice]=useState();
@@ -17,12 +24,23 @@ const ProcedureAddForm = ({petTypes,onAdd}) => {
     const [description,setDescription]=useState('');
    const [petTypesForProcedure,setPetTypesForProcedure]=useState([]);
     const [imagePreview, setImagePreview] = useState(null);
-
+    const [formValid, setFormValid] = useState(false);
     const [image, setImage] = useState();
     const [error, setError] = useState(null);
+    const [errors,setErrors] =useState([]);
   //  const {refetch:refetchPetTypes}=useQuery("petTypes",()=>getPetTypes())
 
+  const validateForm = () => {
+    if (!nameProcedure || !price || !description || !petTypes.length || !image) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
+  };
 
+  useEffect(() => {
+    validateForm();
+  }, [nameProcedure, price, description, petTypes, image]);
 
     const handleAnimalTypeChange = (event) => {
         const { value } = event.target;
@@ -50,10 +68,8 @@ const ProcedureAddForm = ({petTypes,onAdd}) => {
     const handleAddProcedure = async (event)=>
     {
         event.preventDefault()
-        try
-        {
-
-          console.log(nameProcedure,price,description,image,petTypesForProcedure)
+        
+          
 
             const formData = new FormData();
 
@@ -63,29 +79,23 @@ const ProcedureAddForm = ({petTypes,onAdd}) => {
             formData.append('image', image);
             const result = petTypesForProcedure.map(pet_id => ({ pet_id }));
             formData.append('Procedure_to_pet', JSON.stringify(result))
-            console.log(formData);
-            const res = await axios.post('https://localhost:5000/api/procedures',
-                formData,
-                {headers:{ ...authHeader(), 'Content-Type': 'multipart/form-data'}})
+       
+            const res = await AddNewProcedure(formData);
 
             if (res.status===200)
             {
-               // console.log('addasdas');
+            
                 onAdd(res);
-                //history('/admin/procedures')
+              
             }
-         //   return proc;
-
-            //  const procedure = await addProcedure(formData);
-          //alert('fref')
-
-        }
-        catch(e)
-        {
-            alert(e);
-        }
-
-
+        
+            if (res.response.status === 400 && !res.response.data.errors)
+            {
+                setError(res.response.data);
+            }
+            else {
+                setErrors(...errors,res.response.data.errors.map((error) => error.msg))
+            }
 
     }
     return (
@@ -93,7 +103,7 @@ const ProcedureAddForm = ({petTypes,onAdd}) => {
             <label>
                 Image:
                 <input  filename={image}  type="file" accept="image/*" onChange={handleImageChange}/>
-                {error && <div style={{ color: 'red' }}>{error}</div>}
+              
                 {/*{imagePreview && <img src={imagePreview} alt="Selected" />}*/}
             </label>
             <p>Name procedure:</p>
@@ -120,8 +130,9 @@ const ProcedureAddForm = ({petTypes,onAdd}) => {
                     : <h1>aaaa</h1>
          }
 
-
-            <button type="submit">Submit</button>
+            {error && <div style={{ color: 'red' }}>{error}</div>}
+            {errors && <div style={{ color: 'red' }}>{errors}</div>}
+            <button type="submit" className={styles.confirmationItem} disabled={!formValid}>Add</button>
         </form>
     );
 };

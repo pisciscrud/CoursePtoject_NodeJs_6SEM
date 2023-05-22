@@ -91,7 +91,7 @@ a
     text-decoration: none;
     color: #0e343c;
     max-width: 470px;
-
+    width: 100%;
     min-height: 70px;
     background-color: #dbf2f4;
     border-radius: 10px;
@@ -148,19 +148,34 @@ a
 
 .cardSchedule
 {
+    display:flex;
+    flex-direction: column;
     max-width: 170px;
     padding: 7px 5px 5px;
     border-radius: 5px;
     background-color: lightskyblue;
+    font-size: 13px;
 }
 
 
 .cardSchedule234
 {
+    display:flex;
+    flex-direction: column;
     max-width: 170px;
     padding: 7px 5px 5px;
     border-radius: 5px;
     background-color: lightpink;
+    font-size: 13px;
+}
+.cardScheduleHistory
+{
+    display:flex;
+    flex-direction: column;
+    max-width: 170px;
+    padding: 7px 5px 5px;
+    border-radius: 5px;
+    background-color: lightgrey;
 
 }
 
@@ -171,6 +186,7 @@ a
     border-radius: 5px;
     background-color: rgb(199, 255, 182);
     text-align: center;
+
 }
 
 .MasterName

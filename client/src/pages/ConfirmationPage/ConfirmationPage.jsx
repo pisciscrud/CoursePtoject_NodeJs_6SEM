@@ -7,18 +7,14 @@ import {Grid} from "@material-ui/core";
 import ProcedureItem from "../../componets/ProcedureItem";
 import {useQuery} from "react-query";
 import {getSchedule} from "../../actions/schedule";
-import {GetWaitingRecords} from "../../actions/admin";
+import {GetWaitingRecords, handleConfirm} from "../../actions/admin";
 import ConfirmationItem from "../../componets/ConfirmationItem";
 import socket from '../../socket'
 const ConfirmationPage = () => {
 
     const navigate = useNavigate();
   const [records,setRecords]=useState([])
-    const handleLogout = () => {
 
-        localStorage.removeItem('token');
-        navigate('/login');
-    };
 
     const {refetch: refetchRecords}=useQuery("records",()=>GetWaitingRecords())
 
@@ -30,16 +26,24 @@ const ConfirmationPage = () => {
 
     },[records])
 
-    const onConfirm = async (record_id)=>
+    const onConfirm = async (record)=>
     {
-        setRecords(records.filter(r => r.id !== record_id))
+        await  handleConfirm(2,record.id)
+        setRecords(records.filter(r => r.id !== record.id))
+    }
+
+    const onReject = async (record) =>
+    {
+
+        await  handleConfirm(3,record.id)
+        setRecords(records.filter(r => r.id !== record.id))
     }
 
     return (
         <div>
             <Grid container>
                 {records && records.map((record) => (
-                    <ConfirmationItem key={record.id} record={record}  onConfirm={onConfirm}/>
+                    <ConfirmationItem key={record.id} record={record}  onConfirm={onConfirm} onReject={onReject}/>
                 ))}
             </Grid>
 

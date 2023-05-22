@@ -8,6 +8,9 @@ const CommentForm = ({note}) => {
     const [content, setContent] = useState("");
     const [rating, setRating] = useState(0);
     const [formError, setFormError] = useState('');
+    const MAX_CHARACTERS = 100;
+
+
 
    const handleSendComment = async(event)=>
    {
@@ -20,7 +23,7 @@ const CommentForm = ({note}) => {
        try
        {
            const res = await sendComment(content,rating,note.Master.id,note.Procedure_table.id,note.id)
-          // setFormError('');
+           setFormError('');
            setRating(null);
            setContent('');
            //socket.emit('new-comment',{});
@@ -50,7 +53,11 @@ const CommentForm = ({note}) => {
                 </div> */}
           <textarea  className={styles.formControl}
               value={content}
-              onChange={(e) => setContent(e.target.value)}
+              onChange={(e) => {
+                if (e.target.value.length <= MAX_CHARACTERS) {
+                  setContent(e.target.value);
+                }
+              }}
               name="body"
           />
                     <Rating

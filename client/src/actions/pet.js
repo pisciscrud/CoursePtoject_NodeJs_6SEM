@@ -23,14 +23,20 @@ export const deletePet = async (id) =>
 }
 export const addPet = async (pet_type_id,age1,nickname) =>
 {
+    try {
     const age=Number(age1)
-    console.log(pet_type_id,age,nickname)
-    const {response} =await axios.post('https://localhost:5000/api/pets/add',
+    const response =await axios.post('https://localhost:5000/api/pets/add',
         {
              pet_type_id,
              age,
              nickname,
 
         },{headers: authHeader()})
-    return response
+        console.log(response);
+        return response
+    }
+    catch (e)
+    {
+        return e;
+    }
 }

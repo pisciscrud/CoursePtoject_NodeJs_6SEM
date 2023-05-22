@@ -54,7 +54,7 @@ class ProcedureRepository {
                 )
                 return procedure;
             } else {
-                throw createError(500, 'Db error: such procedure in database')
+                throw createError(500, ' such procedure in database')
             }
         } catch (e) {
             throw createError(500, "Db error:" + e.message);

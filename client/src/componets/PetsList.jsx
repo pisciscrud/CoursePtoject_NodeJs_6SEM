@@ -92,6 +92,15 @@ const PetsList = () => {
         }
 
     }
+
+    const handleAddPet = async ()=>
+    {
+        handleClose();
+        refetchPets()
+            .then((data) => {
+                console.log('refetch',data.data);
+                setPets(data.data)})
+    }
     return (
         <div className={classes.root} >
 
@@ -106,13 +115,11 @@ const PetsList = () => {
 
                    </Button>
                     <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
-                        <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                        <DialogTitle id="customized-dialog-title" >
                             Add pet
                         </DialogTitle>
                         <DialogContent >
-                        <PetAddForm petTypes={petTypes} ></PetAddForm>
-
-
+                        <PetAddForm petTypes={petTypes} onAdd={handleAddPet} ></PetAddForm>
                         </DialogContent >
                         <DialogActions>
                             <Button autoFocus onClick={handleClose} color="primary">

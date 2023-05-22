@@ -4,7 +4,7 @@ import axios from "axios";
 export const getSchedule =async()=> {
 
   const records =await   axios.get('https://localhost:5000/api/schedule/all')
-    console.log('schedule', records.data)
+      // console.log('schedule', records.data)
     return records.data;
        /* .then(response => {
                 setSchedule(response.data)
@@ -51,7 +51,7 @@ try {
 }
 catch(e)
 {
-    alert ('ERROR WITH SUBMIT')
+    return e;
 }
 
 }

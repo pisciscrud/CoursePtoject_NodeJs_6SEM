@@ -141,6 +141,15 @@ const MasterList = () => {
 
 
             <div className={styles.filterPanel} style={{justifyContent: 'flex-end',marginRight:60}}>
+                {
+                    isAdm &&  <Button onClick={handleClickOpen}>
+                        <img src={process.env.PUBLIC_URL + '/Vector.svg'} className={styles.icon} width="100"
+                             height="100"/>
+
+                    </Button>
+
+
+                }
                 <div  className={styles.searchByType}>
                     <label htmlFor="animal-filter" style={{marginRight:10}}>For what procedure?:</label>
                     <Select style={{backgroundColor:"white",borderRadius:5}} id='petType'
@@ -159,18 +168,10 @@ const MasterList = () => {
             </div>
             <Grid container>
                 {currentMasters.map((master) => (
-                    <MasterItem procedures={procedures} key={master.id} master={master} isAdm={isAdm}/>
+                    <MasterItem procedures={procedures} key={master.id} master={master} isAdm={isAdm} onDeleteMaster={handleDeleteMaster}  />
                 ))}
             </Grid>
-            {
-                isAdm &&  <Button onClick={handleClickOpen}>
-                    <img src={process.env.PUBLIC_URL + '/Vector.svg'} className={styles.icon} width="100"
-                         height="100"/>
 
-                </Button>
-
-
-            }
             <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
                 <DialogTitle id="customized-dialog-title">
                     Add Master

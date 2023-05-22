@@ -8,16 +8,26 @@ import { loginIn, isAdmin } from "../../actions/user";
 const Login = () => {
     const [login, setLogin] = useState('');
     const [password, setPassword] = useState('');
-
+    const [error,setError]=useState('');
 
 
     const navigate=useNavigate();
     const handleSubmit = async (event) => {
-        //event.preventDefault();
-        await loginIn(login,password);
+        event.preventDefault();
+        if (login.length < 5 || password.length < 5) {
+            setError('Username and password must be at least 5 characters long');
+            return;
+          }
 
+      const res =   await loginIn(login,password);
+      if (res && res.response)
+      {
+          setError(res.response.data.message);
+      }
+        
+      else
+       {
         const isAdm = await isAdmin()
-        console.log(isAdm.data);
         if (isAdm) {
             navigate("/admin");
         }
@@ -25,8 +35,9 @@ const Login = () => {
           navigate("/app");
        }
         window.location.reload();
-
     }
+}
+    
 
 
     return (
@@ -42,6 +53,9 @@ const Login = () => {
                             type="submit">Sign In
                     </button>
                    <div className={styles.signup}> <a href='/'>Sign Up </a></div>
+                </div>
+                <div>
+                    {error && <p style={{color:'red'}}>{error}</p>}
                 </div>
             </form>
         </div>

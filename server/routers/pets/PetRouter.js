@@ -4,7 +4,7 @@ const path = require('path');
 
 const PetService = require('./PetService');
 const roleMiddleware = require("../../middlewares/roleMiddleware");
-
+const { body, validationResult } = require('express-validator');
 const petRouter = express.Router();
 
 const petService = new PetService();
@@ -36,9 +36,24 @@ petRouter.get('/types',async (req,res)=>
     }
 })
 
-petRouter.post('/add',roleMiddleware(["user"]),async(req,res,next) =>{
+petRouter.post('/add',roleMiddleware(["user"]),
+[
+   
+    body('age').notEmpty().isNumeric().custom((value) => {
+        if (value < 0 || value > 100) {
+          throw new Error('Age must be a positive number');
+        }
+        return true;
+    }),
+  
+],
+async(req,res,next) =>{
 
     try {
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
         const idUser=req.userId;
         const {pet_type_id,age,nickname}=req.body;
         const pet = await petService.addPet(pet_type_id,age,idUser,nickname);

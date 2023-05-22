@@ -14,7 +14,7 @@ function formatDate(dateStr) {
     console.log(date)
     return formatDistance(date, new Date(), { addSuffix: true });
 }
-const NotificationItem = ({notification, updateNotificationStatus}) => {
+const NotificationItem = ({notification, updateNotificationStatus,onDelete}) => {
     const [accepted, setAccepted] = useState(notification.accepted);
     const handleCheckboxChange = (event) => {
         const newStatus = event.target.checked;
@@ -22,10 +22,10 @@ const NotificationItem = ({notification, updateNotificationStatus}) => {
         setAccepted(newStatus);
     };
 
-    const handleDelete = async (e)=>
+    const handleDelete = async ()=>
     {
-        e.preventDefault();
-        const res = await onDeleteNotification(notification.id);
+        const res = onDelete(notification)
+       // const res = await onDeleteNotification(notification.id);
         return res;
 
     }

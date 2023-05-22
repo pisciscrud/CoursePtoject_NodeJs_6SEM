@@ -19,7 +19,7 @@ import ProcedureRegistrationForm from "./ProcedureRegistrationForm";
 import ClearIcon from "@mui/icons-material/Clear";
 import {onDeleteNotification} from "../actions/comments";
 import {deleteRecord} from '../actions/schedule'
-
+import {Tooltip} from '@material-ui/core';
 
 
 
@@ -98,7 +98,9 @@ const NoteItem = ({note,onDeleteNote}) => {
                     <div>
 
                     <span className={styles.approved}>{note.Status.status_name}</span>
+                        <Tooltip title="Сancel appointment.">
                         <button onClick={handleDelete} style={{ border: 'none'}}> <ClearIcon style={{fontSize:'medium' ,color: '#9B9B9B'}}/></button>
+                        </Tooltip>
                     </div>
                 }
 

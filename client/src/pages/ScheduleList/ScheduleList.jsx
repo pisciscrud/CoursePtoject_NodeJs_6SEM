@@ -54,11 +54,11 @@ const ScheduleList = () => {
         <>
 
 
-            <Grid style={{display:'flex'}} container spacing={3}>
+            <div style={{display:'flex',marginLeft:30}}>
                 {notes && notes.map(note=>(
                     <NoteItem key={note.id} note={note} onDeleteNote={handleDeleteRecord}  />))
                 }
-                </Grid>
+                </div>
 
         </>
     );

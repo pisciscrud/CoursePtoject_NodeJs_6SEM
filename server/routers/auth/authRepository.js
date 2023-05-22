@@ -26,6 +26,30 @@ class AuthRepository {
         }
     }
 
+    async findUserById(id)
+    {
+        try
+        {
+            const user = await this.prismaClient.User_table.findUnique(
+                {
+                    where:
+                        {
+                            id:id
+                        }
+                        ,
+                    include :
+                        {
+                            Role_table:true
+                        }
+                }
+            )
+            return user;
+        }
+        catch (e) {
+            throw createError(500, "Db error:" + e.message);
+        }
+    }
+
     async createUser(FullName,hashedPassword,login,email)
     {
         try

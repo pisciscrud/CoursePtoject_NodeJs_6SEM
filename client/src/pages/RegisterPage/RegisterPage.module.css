@@ -71,17 +71,11 @@
  }
 
  .inputGroup.error input {
+     color:red;
 
  }
 
- .inputGroup input:focus {
-
- }
-
- .inputGroup .msg {
-
- }
-
+ 
 
 
  .loginButton {

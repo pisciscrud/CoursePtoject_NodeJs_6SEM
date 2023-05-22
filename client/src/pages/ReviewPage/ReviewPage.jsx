@@ -19,12 +19,32 @@ const ReviewPage = () => {
 
                 setComments(data.data)
             })
-        socket.on('new-comment',(data)=>{
-
-            setComments((comments)=>[...comments,data.comment])})
-
 
     },[])
+    useEffect(()=> {
+        socket.on('new-comment',(data)=>{
+            if(comments.find(x => x.id == data.comment.id)){
+            setComments((comments)=>[...comments.map((x => {
+                if(x.id == data.comment.id)
+                {
+                    return data.comment
+                }
+                else
+                {
+                    return x
+                }
+            })
+            )
+            ])
+            }else{
+                setComments([...comments, data.comment])
+            }
+        })
+
+        return (() => {
+            socket.removeAllListeners('new-comment')
+        })
+    },[comments])
     return (
         <div className={styles.full}>
             <div className={styles.container}>

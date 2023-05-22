@@ -13,16 +13,20 @@ module.exports = function (roles) {
 
             const token = req.headers.authorization.split(' ')[1]
             if (!token) {
-                return res.status(403).json({message: "Пользователь не авторизован"})
+                return res.status(403).json({message: "User is not authorise"})
             }
 
            const {roleId,id} = jwt.verify(token, process.env.SECRET_KEY);
             let hasRole = false;
-            const role1 = await authRepository.findRoleById(roleId);
+          // const role1 = await authRepository.findRoleById(roleId);
+
+            const user = await authRepository.findUserById(id)
+
+
 
             roles.forEach(role=>
             {
-                if (role === role1.Role_name)
+                if (role === user.Role_table.Role_name)
                     hasRole=true
             })
             if (!hasRole) {

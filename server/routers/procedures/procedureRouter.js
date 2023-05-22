@@ -4,7 +4,7 @@ const path = require('path');
 const fs = require('fs')
 const multer = require('multer');
 const bodyParser = require('body-parser');
-
+const { body, validationResult } = require('express-validator');
 
 
 
@@ -33,13 +33,29 @@ procedureRouter.get('',async (req,res,next)=>{
     }
 })
 
-procedureRouter.put('/:id',roleMiddleware(["admin"]),upload.single('image'),async (req,res,next)=>
+procedureRouter.put('/:id',roleMiddleware(["admin"]),upload.single('image'),
+
+
+[
+    body('name_procedure').notEmpty(),
+    body('Price').notEmpty().isNumeric().custom((value) => {
+        if (value < 0 ||  value > 10000 ) {
+          throw new Error('Price must be a positive number');
+        }
+        return true;
+    }),
+    body('description').notEmpty()
+],
+async (req,res,next)=>
 {
     try
     {
 
         let result ;
-
+        const errors = validationResult(req);
+        if (!errors.isEmpty()) {
+          return res.status(400).json({ errors: errors.array() });
+        }
         const {id, name_procedure, Price, description, procedure_photo1} = req.body;
 
         if ( procedure_photo1 === undefined)
@@ -68,25 +84,34 @@ procedureRouter.put('/:id',roleMiddleware(["admin"]),upload.single('image'),asyn
 
 
 
-procedureRouter.post('', roleMiddleware(["admin"]),  upload.single('image') , async(req,res,next)=>
+procedureRouter.post('', roleMiddleware(["admin"]),  upload.single('image') , 
+[
+    body('name_procedure').notEmpty(),
+    body('Price').notEmpty().isNumeric().custom((value) => {
+        if (value < 0 || value > 10000)  {
+          throw new Error('Price must be a positive number');
+        }
+        return true;
+    }),
+    body('description').notEmpty(),
+    body('Procedure_to_pet').notEmpty()],
+async(req,res,next)=>
 {
   try {
 
-     console.log('body',req.body);
+    const errors = validationResult(req);
+      if (!errors.isEmpty()) {
+        return res.status(400).json({ errors: errors.array() });
+      }
       const {name_procedure, Price, description,Procedure_to_pet} = req.body;
-   console.log('files',req.file.filename)
-        const procedure_photo=req.file.filename;
-
-    //  console.log('img',img)
-    //   // let procedure_photo = uuid.v4() + ".png";
-    //   // img.mv(path.resolve(__dirname, '../..', 'static', procedure_photo));
+      const procedure_photo=req.file.filename;
       const procedure = await procedureService.createProcedure(name_procedure, Price, description, procedure_photo,Procedure_to_pet);
 
       return res.json(procedure);
   }
   catch (e)
   {
-      next(e);
+    res.status(400).json(e.message);
   }
 })
 
@@ -155,7 +180,7 @@ procedureRouter.get('/types/:id',async (req,res,next)=>
 })
 
 
-procedureRouter.get('/petsOfUser/:id',roleMiddleware(["user"]),async (req,res,next)=>
+procedureRouter.get('/petsOfUser/:id',roleMiddleware(["user","admin"]),async (req,res,next)=>
 
 {
     try {

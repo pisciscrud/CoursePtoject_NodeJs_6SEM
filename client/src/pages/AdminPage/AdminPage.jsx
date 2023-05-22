@@ -1,8 +1,9 @@
-import React from 'react';
+import React,{useEffect} from 'react';
 import styles from "../MainPage/MainPage.module.css";
 import Header from "../../componets/Header";
 import {Link, Outlet, useNavigate} from "react-router-dom";
-
+import jwt_decode from 'jwt-decode';
+import { loginIn, isAdmin } from "../../actions/user";
 const AdminPage = () => {
 
     const { PUBLIC_URL } = process.env
@@ -13,6 +14,20 @@ const AdminPage = () => {
         localStorage.removeItem('token');
         navigate('/login');
     };
+
+    useEffect( ()=>{
+        const asyncFn = async () => {
+            const isAdm =  await isAdmin();
+            if (!isAdm) {
+
+                navigate("/app");
+            }
+        };
+        asyncFn();
+
+
+
+    },[])
 
     return (
         <div className={styles.fullScreenContainer}>

@@ -6,7 +6,7 @@ const SchedulePage = () => {
     return (
 
         <div className={styles.container}>
-            <ScheduleList style={{marginLeft:30}}></ScheduleList>
+            <ScheduleList ></ScheduleList>
         </div>
 
     );

@@ -81,3 +81,42 @@ export const getProceduresAll = async ()  => {
     }
 
 
+
+    export const AddNewProcedure = async (formData) =>
+    {
+        try 
+        {
+            const res = await axios.post('https://localhost:5000/api/procedures',
+                formData,
+                {headers:{ ...authHeader(), 'Content-Type': 'multipart/form-data'}})
+
+                return res;
+        }
+        catch (e)
+        {
+           
+        return e;
+        }
+    }
+
+
+    export const UpdateProcedure = async(id,formData)=>
+    {
+        try 
+        {
+          const res = await axios.put(
+                `https://localhost:5000/api/procedures/${id}`,
+                formData,
+                { headers: { ...authHeader(), 'Content-Type': 'multipart/form-data' } }
+            );
+
+            return res;
+
+        }
+        catch (e)
+        {
+        console.log(e)
+        return e;
+        }
+    }
+

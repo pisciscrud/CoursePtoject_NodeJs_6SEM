@@ -3,15 +3,22 @@ import styles from './main.module.css'
 const CardSchedule = ({appointment}) => {
     return (
         <>
-        {appointment.status_id === 2  ? (
+        {appointment.status_id === 2  && (
                 <div className={styles.cardSchedule}>
-                    <p>Client: {appointment.User_table.full_name}</p>
-                    <p>Procedure: {appointment.Procedure_table.name_procedure}</p>
+                    <span>Client: {appointment.User_table.full_name}</span>
+                    <span>Procedure: {appointment.Procedure_table.name_procedure}</span>
                 </div>
-            ) : <div className={styles.cardSchedule234}>
-            <p>Client: {appointment.User_table.full_name}</p>
-            <p>Procedure: {appointment.Procedure_table.name_procedure}</p>
+            ) }
+            {appointment.status_id === 1 && <div className={styles.cardSchedule234}>
+                <span>Client: {appointment.User_table.full_name} </span>
+                <span>Procedure: {appointment.Procedure_table.name_procedure}</span>
         </div>}
+            {
+                appointment.status_id === 4 && <div className={styles.cardScheduleHistory}>
+                    <span>Client: {appointment.User_table.full_name}</span>
+                    <span>Procedure: {appointment.Procedure_table.name_procedure}</span>
+                    </div>
+            }
         </>
     );
 };

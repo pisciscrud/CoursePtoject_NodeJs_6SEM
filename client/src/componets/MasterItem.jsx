@@ -74,13 +74,19 @@ const DialogContent = withStyles((theme) => ({
 const MasterItem = ({master,isAdm,onDeleteMaster}) => {
     const classes = useStyles();
     const [open, setOpen] = React.useState(false);
-    const {refetch:refetchRatMaster,data:ratMaster}=useQuery('refetchRatingMaster',()=>ratingMaster(master.id));
+    const {refetch:refetchRatMaster}=useQuery('ratMaster',()=>ratingMaster(master.id));
+    const [ratMaster,setRatMaster]=useState([]);
     const handleClickOpen = () => {
         setOpen(true);
+        refetchRatMaster()
+            .then((data)=>{
+                setRatMaster(data.data)})
     };
     const handleClose = () => {
         setOpen(false);
     };
+
+
 
     const  handleDeleteMaster = async () =>
     {
@@ -96,7 +102,7 @@ const MasterItem = ({master,isAdm,onDeleteMaster}) => {
                 <CardMedia
                     className={classes.media}
                     image={`https://localhost:5000/${master.photo_master}`}
-                    title="Contemplative Reptile"/>
+                    title={`${master.name_master} ${master.surname_master}`}/>
                 <CardContent>
                     <h4>{master.name_master} {master.surname_master}</h4>
                 </CardContent>

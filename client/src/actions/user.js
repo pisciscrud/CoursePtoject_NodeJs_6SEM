@@ -16,11 +16,13 @@ try {
 
     });
 
-    alert(response.data.message)
+        return  response.data.message 
 }
 catch (err)
 {
-    alert(err.response.data.message)
+
+    console.log(err)
+   return err;
 }
 
 };
@@ -73,7 +75,7 @@ try {
 }
 catch (err)
 {
-    alert(err.response.data.message);
+    return err;
 }
 
 }

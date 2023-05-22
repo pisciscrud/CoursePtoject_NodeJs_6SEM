@@ -16,19 +16,41 @@ class ScheduleRepository
         try
         {
            const dat = new Date(date_);
+           dat.setUTCHours(0,0,0)
             const t = Number(time.substring(0,2));
             const time1 = new Date(null);
-            time1.setUTCHours(t)
-
+            time1.setUTCHours(t);
+            console.log(dat);
 
             const rec = await this.prismaClient.Schedule.findFirst({
                 where: {
                     master_id:master_id,
                     procedure_id:procedure_id,
                     date_:dat,
-                    time:time
+                    time:time,
+                    status_id:
+                        {
+                            in: [1,2]
+                        }
                 }
             })
+
+            const recPet = await this.prismaClient.Schedule.findFirst(
+                {
+                    where :
+                        {
+                            pet_id: pet_id,
+                            date_:dat,
+                            time:time,
+                            status_id:
+                                {
+                                    in: [1,2]
+                                }
+
+                        }
+                }
+            )
+
 
             const  connectionBetweenMasterAndProcedure = await this.prismaClient.Master_to_Procedure.findFirst(
                 {
@@ -55,6 +77,12 @@ class ScheduleRepository
                        procedure_id: procedure_id
                    }
                })
+
+               if (recPet)
+               {
+                   throw new Error("sorry we already have record for this pet ")
+               }
+
 
                if  (!rec && connectionBetweenMasterAndProcedure && connectionProcedureWithType)
                {
@@ -223,7 +251,7 @@ class ScheduleRepository
 
 
 
-         console.log(updatedRecords)
+
          return updatedRecords
          
      }
@@ -315,7 +343,33 @@ class ScheduleRepository
         }
  }
 
+ async getRecordsOfDay(date) {
+     try {
+         const records = await this.prismaClient.Schedule.findMany(
+             {
+                 where: {
+                     date_: date,
+                     status_id:
+                         {
+                             in:[1,2,4]
+                         }
 
+                 },
+                 include:
+                     {
+                         User_table: true,
+                         Procedure_table: true
+                     }
+
+             }
+         )
+         return records;
+     } catch (e) {
+
+         throw createError(500, "Db Error" + e.message);
+
+     }
+ }
 
 
  async getRecordsForProcedures(id)
@@ -405,7 +459,11 @@ class ScheduleRepository
              orderBy: { date_: 'asc' },
              where: {
                  owner_id: id,
-                 date_: { gte: new Date() }
+                 date_: { gte: new Date() },
+                 status_id:
+                     {
+                         in:[1,2]
+                     }
              },
 
              select :

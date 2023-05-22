@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState,useEffect } from 'react';
 import { Select, Input } from '@material-ui/core';
 import { useQuery } from 'react-query';
 import { getPetsOfUser } from '../actions/user';
@@ -9,19 +9,36 @@ import ImageResizer from 'react-image-file-resizer';
 import axios from 'axios';
 import { authHeader } from '../actions/procedure';
 import { useNavigate } from 'react-router-dom';
+ 
 
-const ProcedureUpdateForm = ({ petTypes, procedure, onUpdate }) => {
-    const history = useNavigate();
+import { UpdateProcedure } from '../actions/procedure';
+import styles from './main.module.css';
+
+const ProcedureUpdateForm = ({ petTypes, procedure, onUpdate,errors }) => {
+ 
+  
     const [price, setPrice] = useState(procedure.Price);
     const [nameProcedure, setNameProcedure] = useState(procedure.name_procedure);
     const [description, setDescription] = useState(procedure.description);
-    const [petTypesForProcedure, setPetTypesForProcedure] = useState(
-        procedure.Procedure_to_pet.map((p) => p.pet_id)
-    );
-   // const [imagePreview, setImagePreview] = useState(null);
+    const [formValid, setFormValid] = useState(false);
+    const [petTypesForProcedure,setPetTypesForProcedure]=useState([]);
 
     const [image, setImage] = useState(null);
     const [error, setError] = useState(null);
+
+  // const [errors,setErrors]=useState([]);
+
+   const validateForm = () => {
+    if (!nameProcedure || !price || !description ) {
+      setFormValid(false);
+    } else {
+      setFormValid(true);
+    }
+  };
+   useEffect(() => {
+  //  setError('');
+    validateForm();
+  }, [nameProcedure, price, description]);
 
     const handleAnimalTypeChange = (event) => {
         const { value } = event.target;
@@ -48,8 +65,8 @@ const ProcedureUpdateForm = ({ petTypes, procedure, onUpdate }) => {
 
     const handleUpdateProcedure = async (event) => {
         event.preventDefault();
-        try {
-            if (!nameProcedure || !price || !description || petTypesForProcedure.length === 0) {
+    
+            if (!nameProcedure || !price || !description ) {
                 setError('Please fill in all fields');
                 return;
             }
@@ -66,22 +83,20 @@ const ProcedureUpdateForm = ({ petTypes, procedure, onUpdate }) => {
 
                 formData.append('procedure_photo1', procedure.procedure_photo);
             }
-            // const result = petTypesForProcedure.map((pet_id) => ({ pet_id }));
-            // formData.append('Procedure_to_pet', JSON.stringify(result));
+        
 
-            const res = await axios.put(
-                `https://localhost:5000/api/procedures/${procedure.id}`,
-                formData,
-                { headers: { ...authHeader(), 'Content-Type': 'multipart/form-data' } }
-            );
+            const res = await onUpdate( formData);
 
-            if (res.status === 200) {
-              onUpdate();
 
-            }
-        } catch (e) {
-            alert(e);
-        }
+            // if (res.status === 200) {
+            //   onUpdate();
+            // }
+
+            // if (res.response && res.response.status === 400 )
+            // {
+            //     setErrors(...errors,res.response.data.errors.map((error) => error.msg))
+            // }
+         
     };
 
     return (
@@ -97,28 +112,13 @@ const ProcedureUpdateForm = ({ petTypes, procedure, onUpdate }) => {
             <Input type="number" value={price} onChange={(e)=>setPrice(e.target.value)}></Input>
             <p>Description:</p>
             <Input type="text" value={description} onChange={(e)=>setDescription(e.target.value)}></Input>
-            {/*<p>Choose for which pets</p>*/}
+            <div>
 
-            {/*{*/}
-            {/*    petTypes  && petTypes.length>0 ?*/}
-            {/*        petTypes.map((type)=>*/}
-            {/*            //    console.log('aa'))*/}
-            {/*            <div >*/}
-            {/*                <label>*/}
-            {/*                    <input type="checkbox"*/}
-            {/*                           value={type.id}*/}
-            {/*                           onChange={handleAnimalTypeChange}*/}
-            {/*                           checked={petTypesForProcedure.includes(type.id)}/>*/}
-
-            {/*                    {type.pet_name}*/}
-
-            {/*                </label>*/}
-            {/*            </div> )*/}
-            {/*        : <h1>aaaa</h1>*/}
-            {/*}*/}
-
-
-            <button type="submit">Submit</button>
+                <div>
+                {errors && <div style={{ color: 'red' }}>{errors}</div>}
+                </div>
+            <button type="submit" className={styles.confirmationItem} disabled={!formValid}>Update</button>
+            </div>
         </form>
     );
 };

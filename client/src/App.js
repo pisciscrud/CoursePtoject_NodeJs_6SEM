@@ -22,7 +22,7 @@ import ScheduleTable from "./componets/ScheduleTable";
 
 import NotificationPage from "./pages/NotificationPage/NotificationPage";
 import SchedulePage from "./pages/SchedulePage/SchedulePage";
-
+import NotFoundPage from './pages/NotFoundPage';
 
 import ConfirmationPage from "./pages/ConfirmationPage/ConfirmationPage";
 
@@ -61,7 +61,9 @@ function App() {
                           <Route path="procedures" element={<ProcedurePage/>}></Route>
                           <Route path="reviews" element={<ReviewPage />}></Route>
                       </Route>
+                      <Route path="*" element={<NotFoundPage/>}></Route>
                   </Routes>
+
               </Router>
           </>
       </LocalizationProvider>

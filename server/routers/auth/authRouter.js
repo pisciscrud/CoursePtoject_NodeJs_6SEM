@@ -8,23 +8,23 @@ const roleMiddleware = require('../../middlewares/roleMiddleware')
 
 
 authRouter.post('/register', [
-        check('FullName', 'Name must be longer than 3 and shorter 12').isLength({min: 3, max: 20}),
+        check('FullName', 'Name must be longer than 5 and shorter 12').isLength({min: 5, max: 20}),
         check('email', 'Incorrect email').isEmail(),
-        check('login', 'Login must be longer than 3 and shorter 12').isLength({min: 3, max: 12}),
-        check('password', 'Password must be longer than 3 and shorter 12').isLength({min: 3, max: 12}),
+        check('login', 'Login must be longer than 5 and shorter 12').isLength({min: 5,max:15}),
+        check('password', 'Password must be longer than 5 and shorter 12').isLength({min: 5, max: 15}),
     ]
     , async (req, res, next) => {
         try {
             const errors = validationResult(req)
             if (!errors.isEmpty()) {
-                return res.status(400).json({message: 'Incorrect request', errors})
+                return res.status(400).json({message: 'Your from does not valid', errors})
             }
-            console.log(req.body);
+
             const {FullName, email, login, password,} = req.body;
             const user = await authService.register(FullName, email, login, password,);
-            res.json({message: "User was created"});
+            res.json({message: "You have been successfully registered"});
         } catch (err) {
-            next(err);
+            res.status(err.status).json({ message: err.message })
         }
 
     })
@@ -35,28 +35,19 @@ authRouter.post('/login', async (req, res, next) => {
             const {password, login} = req.body;
 
             const token = await authService.login(login, password);
-            res.json(token);
+            // console.log(token);
+             res.json(token);
 
         } catch (err) {
-            next(err);
+
+         console.log(err);
+         res.status(err.status).json({ message: err.message })
 
         }
     }
 )
 
-authRouter.post('/refresh', async(req, res, next) => {
-    try {
-        const refreshToken = req.body.refreshToken;
 
-        if(!refreshToken) throw new Error('Refresh token in not provided');
-
-        const { accessToken , refreshToken: newRefreshToken } = await authService.refreshToken(refreshToken)
-
-    }
-    catch(err) {
-
-    }
-})
 
 authRouter.get("/admin", async (req, res, next) => {
     try {

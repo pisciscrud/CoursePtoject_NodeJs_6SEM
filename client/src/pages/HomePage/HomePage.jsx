@@ -6,8 +6,9 @@ import {Outlet} from "react-router-dom";
 
 const HomePage = () => {
     return (
+        <div className={styles.full}>
         <div className={styles.fullScreenContainer}>
-            <h1>Home</h1>
+        </div>
         </div>
     );
 };

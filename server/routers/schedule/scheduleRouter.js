@@ -46,6 +46,19 @@ scheduleRouter.get('/all',async (req,res,next)=>
 
 
 })
+scheduleRouter.get('/date',roleMiddleware(["admin"]),async(req,res,next)=>
+{
+    try
+    {
+        const date = req.query.date
+        const result= await scheduleService.getRecordsOfDay(date);
+        res.json(result);
+    }
+    catch (e)
+    {
+        next(e)
+    }
+})
 
 scheduleRouter.get('/graphic',roleMiddleware(["user"]),async (req,res,next)=> {
     try {
@@ -134,7 +147,7 @@ scheduleRouter.get('/current-day',roleMiddleware (["admin"]), async  (req,res,ne
 {
     try {
         const records =  await scheduleService.getCurrentDay();
-       // console.log('records', records);
+
         res.json(records);
     }
     catch (e)
@@ -144,11 +157,12 @@ scheduleRouter.get('/current-day',roleMiddleware (["admin"]), async  (req,res,ne
 })
 
 
+
+
+
 scheduleRouter.get('/update-records',async(req,res,next)=>
 {
 
-
-  //  console.log('dfds')
     return await scheduleService.updateStatusRecord();
 
 })
@@ -184,13 +198,14 @@ scheduleRouter.post('/submit',roleMiddleware(["user"]),async (req,res,next)=>
     {
         const idUser= req.userId;
         const {pet_id,master_id,procedure_id,date_,time}=req.body;
-        //console.log(pet_id,master_id,procedure_id,date_,time)
+
         const recordForSubmit = await scheduleService.addRecordByUser(pet_id,master_id,procedure_id,idUser,date_,time)
         res.json(recordForSubmit);
     }
     catch(e)
     {
-        next(e);
+
+        res.status(400).json(e.message);
 
     }
 
@@ -222,8 +237,7 @@ scheduleRouter.post('/confirm',roleMiddleware(["admin"]),async (req,res,next)=>
      const {updateRecord,createdNotification} = await scheduleService.confirmRecord(status_id,record_id)
    console.log(createdNotification);
         if (createdNotification) {
-           // await emitNotification(ws, createdNotification.user_id, createdNotification)
-          //  ws.emit('new-notification',{userId: createdNotification.user_id, notification: createdNotification})
+          
         const socket = allSockets.find(item => item.userId = createdNotification.user_id).socket;
 
         if(socket) {
@@ -240,6 +254,11 @@ scheduleRouter.post('/confirm',roleMiddleware(["admin"]),async (req,res,next)=>
     }
 
 })
+
+
+
+
+
 
 
 

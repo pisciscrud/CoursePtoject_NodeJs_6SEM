@@ -42,11 +42,27 @@ export const handleConfirm = async(status_id, record_id)=>
         {}
     }
 
-export const getScheduleOfDay = async ()=>
+export const getScheduleOfDay = async (date)=>
 {
     try
     {
-        const records= await axios.get('https://localhost:5000/api/schedule/current-day',{headers: authHeader()})
+        const records= await axios.get(`https://localhost:5000/api/schedule/date?date=${date}`,{headers: authHeader()})
+        console.log('schedule',records.data)
+        return records.data;
+    }
+    catch(e)
+    {
+
+    }
+}
+
+
+export const   getScheduleOfChoosenDay=async(date)=>
+{
+    try
+    {
+        const records= await axios.get(`https://localhost:5000/api/schedule/date?date=${date}`,{headers: authHeader()});
+
         console.log('schedule',records.data)
         return records.data;
     }

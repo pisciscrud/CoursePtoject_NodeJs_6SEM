@@ -12,14 +12,9 @@ class ScheduleService
 
     async addRecordByUser(pet_id,master_id, procedure_id, owner_id, date_, time)
     {
-        try {
-            const res = await this.scheduleRepository.addRecord(pet_id, master_id, procedure_id, owner_id, date_,time)
-            return res;
-        }
-        catch (e)
-        {
-        console.log(e.message)
-        }
+
+            return  await this.scheduleRepository.addRecord(pet_id, master_id, procedure_id, owner_id, date_,time)
+
     }
     async updateStatusRecord()
     {
@@ -34,11 +29,11 @@ class ScheduleService
     {
         try
         {
-            const now = new Date();
-            const timezoneOffset = now.getTimezoneOffset() * 60 * 1000;
-            const today = new Date(now.getTime() - (now.getTime() + timezoneOffset) % (24 * 60 * 60 * 1000));
-            const t = today.setUTCHours(0);
-            const res = await this.scheduleRepository.getAllRecordsOfDate(today);
+            const dateOfRecords = new Date();
+            dateOfRecords.setUTCHours(0,0,0,0);
+           const dat = dateOfRecords.toISOString()
+            console.log('TODAY',dat);
+            const res = await this.scheduleRepository.getAllRecordsOfDate(dateOfRecords);
             return res;
         }
         catch(e)
@@ -46,6 +41,29 @@ class ScheduleService
 
             console.log('Error:', e.message);
         }
+    }
+
+
+    async getRecordsOfDay(date)
+    {
+        try
+        {
+
+
+            const dateOfRecords = new Date(date);
+            dateOfRecords.setUTCHours(0);
+            dateOfRecords.setUTCMinutes(0);
+            dateOfRecords.setUTCSeconds(0);
+            console.log('DOR',dateOfRecords);
+            const res = await this.scheduleRepository.getRecordsOfDay(dateOfRecords)
+            return res;
+        }
+        catch(e)
+        {
+
+            console.log('Error:', e.message);
+        }
+
     }
 
     async  getRecordsOfUser(idUser,id)

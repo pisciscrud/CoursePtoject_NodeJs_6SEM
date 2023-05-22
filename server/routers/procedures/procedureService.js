@@ -31,7 +31,7 @@ class ProcedureService{
         }
         catch(e)
         {
-
+             return e;
         }
     }
 

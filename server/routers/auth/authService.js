@@ -13,17 +13,19 @@ class AuthService {
     }
 
     async login(login, password) {
-        const user = await this.authRepository.findUserByLogin(login);
+        
+            const user = await this.authRepository.findUserByLogin(login);
 
-        if (!user) {
-            throw createError(400, "User with this username does not exist")
-        }
+            if (!user) {
+                throw createError(400, "User with this username does not exist")
+            }
 
-        if (!(await bcrypt.compare(password, user.password))) {
-            throw createError(400, "Password is incorrect");
-        }
+            if (!(await bcrypt.compare(password, user.password))) {
+                throw createError(400, "Password is incorrect");
+            }
 
-        return jwt.sign({id: user.id, roleId: user.id_role}, process.env.SECRET_KEY, { expiresIn: '1h' });
+            return jwt.sign({id: user.id}, process.env.SECRET_KEY, {expiresIn: '24h'});
+       
     }
 
     async register(FullName, email, login, password) {
@@ -44,12 +46,16 @@ class AuthService {
 
     async isAdmin(token) {
 
-        const {roleId} = await jwt.verify(token, process.env.SECRET_KEY);
-     //   console.log('roleId from authService' + roleId);
-        const role = await this.authRepository.findRoleById(roleId);
-        //console.log('ROLE' + role.Role_name);
-        const admin = (role.Role_name === "admin") ? true : false;
-        return admin;
+
+        const {id} =  jwt.verify(token, process.env.SECRET_KEY);
+        const user = await this.authRepository.findUserById(id);
+        const admin = (user.id_role === 2) ? true : false;
+        // const {roleId} = await jwt.verify(token, process.env.SECRET_KEY);
+        //
+        // const role = await this.authRepository.findRoleById(roleId);
+        //
+        // const admin = (role.Role_name === "admin") ? true : false;
+       return admin;
 
     }
 

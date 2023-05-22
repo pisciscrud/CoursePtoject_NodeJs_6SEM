@@ -31,10 +31,10 @@ notificationRouter.get('/',roleMiddleware(["user"]), async(req,res,next)=>{
         const idUser = req.userId
         const notifications = await notificationService.getNotifications(idUser);
         const notification1 = await notificationService.getNotionAboutRecord(idUser);
-       console.log(notification1);
+      
         if (notification1)
         {
-            const socket = allSockets.find(item => item.userId = notification1.user_id).socket;
+            const socket = allSockets.find(item => item.userId = notification1.user_id)?.socket;
 
             if(socket) {
                 socket.emit('admin-notification', { notification: notification1 })
@@ -55,8 +55,9 @@ notificationRouter.delete('/:id',roleMiddleware(["user"]),async (req,res,next)=>
     try
     {
         const {id} =req.params;
-        console.log('ID',id);
-        return  await notificationService.deleteNotification(id)
+
+        const result = await notificationService.deleteNotification(id);
+        res.json(result);
     }
     catch (e)
     {

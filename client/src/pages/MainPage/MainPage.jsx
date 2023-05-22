@@ -1,8 +1,9 @@
-import React from 'react';
+import React, {useEffect} from 'react';
 import styles from './MainPage.module.css'
 import Header from "../../componets/Header";
 import {Link, Outlet} from "react-router-dom";
 import { useNavigate} from "react-router-dom";
+import {isAdmin} from "../../actions/user";
 const MainPage = () => {
     const { PUBLIC_URL } = process.env
     const navigate = useNavigate();
@@ -12,10 +13,23 @@ const MainPage = () => {
         localStorage.removeItem('token');
         navigate('/login');
     };
+    useEffect( ()=>{
+        const asyncFn = async () => {
+            const isAdm =  await isAdmin();
+            if (isAdm) {
+
+                navigate("/admin");
+            }
+        };
+        asyncFn();
+
+        //   window.location.reload();
+
+    },[])
 
     return (
         <div className={styles.fullScreenContainer}>
-            <div className={styles.header}>
+            <div>
                 <Header></Header>
             </div>
             <div className={styles.content}>

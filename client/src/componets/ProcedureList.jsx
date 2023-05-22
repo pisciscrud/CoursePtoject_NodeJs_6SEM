@@ -25,6 +25,10 @@ import FilterPanel from "./FilterPanel";
 import {MenuItem} from "@mui/material";
 import {getProceduresByType} from '../actions/procedure'
 
+import { UpdateProcedure } from '../actions/procedure';
+
+
+
 
 const useStyles = makeStyles((theme) => ({
     root: {
@@ -93,6 +97,19 @@ const ProcedureList = () => {
    }
 
 
+   const handleUpdateProcedure = async(currentProcedure,updatedProcedure)=>
+   {
+
+    const res =  await  UpdateProcedure(currentProcedure.id,updatedProcedure);
+    if (res.status === 200) {
+        refetchProcedures()
+            .then((data) => {
+                setProcedures(data.data)})
+    }
+    return res;
+   }
+
+
 
 
    const [procedures,setProcedures]=useState([]);
@@ -116,7 +133,7 @@ const ProcedureList = () => {
         if (event.target.value === 0) {
             refetchProcedures()
                 .then((data) => {
-                    //console.log('refetch',data.data);
+
                     setProcedures(data.data)
                 })
             setFilterType(event.target.value);
@@ -133,7 +150,7 @@ const ProcedureList = () => {
     {
         refetchProcedures()
             .then((data) => {
-                //console.log('refetch',data.data);
+
                 setProcedures(data.data)})
 
     },[])
@@ -178,18 +195,22 @@ const ProcedureList = () => {
 
                 <Grid container>
                     {currentProcedures && currentProcedures.map((procedure) => (
-                        <ProcedureItem key={procedure.id} isAdm = {isAdm} procedure={procedure} schedule={schedule} onDeleteProcedure={handleDeleteProcedure} />
+                        <ProcedureItem key={procedure.id} isAdm = {isAdm} procedure={procedure} schedule={schedule} onDeleteProcedure={handleDeleteProcedure}  onUpdateProcedure={handleUpdateProcedure}/>
                     ))}
                 </Grid>
                 <Dialog onClose={handleClose} aria-labelledby="customized-dialog-title" open={open} >
-                    <DialogTitle id="customized-dialog-title" onClose={handleClose}>
+                    <DialogTitle id="customized-dialog-title" >
                         Procedure
                     </DialogTitle>
                     <DialogContent >
                         <ProcedureAddForm  onAdd={handleAddProcedure} petTypes={petTypes}></ProcedureAddForm>
 
                     </DialogContent >
-
+                    <DialogActions>
+                        <Button autoFocus onClick={handleClose} color="primary">
+                            Close
+                        </Button>
+                    </DialogActions>
                 </Dialog>
 
 

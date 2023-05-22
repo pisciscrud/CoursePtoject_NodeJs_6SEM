@@ -29,7 +29,7 @@ import {isAdmin} from "../actions/user";
 import ProcedureUpdateForm from "./ProcedureUpdateForm";
 import {getPetTypes} from "../actions/pet";
 
-
+import { UpdateProcedure } from '../actions/procedure';
 
 
 const useStyles = makeStyles({
@@ -84,8 +84,9 @@ const DialogContent = withStyles((theme) => ({
 
 
 
-const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
+const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure,onUpdateProcedure}) => {
     const classes = useStyles();
+   
     const [open, setOpen] = React.useState(false);
     const [open1,setOpen1]=React.useState(false);
    const [masters, setMasters] = useState([])
@@ -104,9 +105,27 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
 
     const {refetch:refetchPetTypes,data:petTypes}=useQuery("petTypes",()=>getPetTypes())
 
-  const  handleUpdatePhoto = ()=>
+    const [errors,setErrors]=useState([]);
+
+  const  handleUpdateProcedure = async (updatedProcedure)=>
     {
-        handleClose1();
+
+        try {
+            const res = await onUpdateProcedure(procedure.id, updatedProcedure);
+            if (res.status === 200) {
+                setErrors('');
+                handleClose1();
+              }
+  
+              if (res.response && res.response.status === 400 )
+              {
+                  setErrors(...errors,res.response.data.errors.map((error) => error.msg))
+              }
+        
+        }
+        catch (error) {
+            console.log(error);
+          }
     }
 
 
@@ -151,11 +170,7 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
             }
     }, []);
 
-    // function filterPetsByType(pets, petType) {
-    //   const available = pets.filter(p => petType.map(t => t.pet_type_id).includes(p.pet_type_id));
-    //   console.log('available', available);
-    //   setAvailablePets(available);
-    // }
+ 
 
     return (
         <div >
@@ -193,11 +208,11 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
                         </>
                 }
             </Card>
-            <Dialog onClose={handleClose1} aria-labelledby="customized-dialog-title" open={open1} style={{backgroundColor: 'rgb(220,154,254)' }}>
+            <Dialog onClose={handleClose1} aria-labelledby="customized-dialog-title" open={open1}>
                 <DialogContent>
-                            <ProcedureUpdateForm onUpdate={handleUpdatePhoto}    procedure={procedure} petTypes={petTypes}/>
+                            <ProcedureUpdateForm onUpdate={handleUpdateProcedure}  errors={errors}  procedure={procedure} petTypes={petTypes}/>
                 </DialogContent>
-                <DialogActions style={{backgroundColor: 'rgb(220,154,254)' }}>
+                <DialogActions>
                     <Button autoFocus onClick={handleClose1} color="primary">
                         Close
                     </Button>
@@ -218,6 +233,7 @@ const ProcedureItem = ({procedure, schedule,isAdm,onDeleteProcedure}) => {
                         pets={pets}
                         masters={masters}
                         schedule={schedule}
+                        onClose={handleClose}
                     />
                 </DialogContent >
                 <DialogActions style={{backgroundColor: 'rgb(220,154,254)' }}>

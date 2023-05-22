@@ -2,12 +2,7 @@ import React from 'react';
 import { Bar } from 'react-chartjs-2';
 import Chart from 'chart.js/auto';
 
-// Chart.registerScale('category', {
-//     parse: function(value) {
-//         return value;
-//     },
-//     // add any other options you need
-// });
+
 const ProcedureChart = ({ data }) => {
     const petNames = data.map((pet) => pet.name);
     const procedureCounts = data.map((pet) => pet.count);
@@ -62,7 +57,7 @@ const ProcedureChart = ({ data }) => {
     };
 
     return (
-        <div style={{ width: "500px", height: "500px" }}>
+        <div style={{ width: "500px", height: "300px" }}>
 
             <Bar
                 data={chartData}
